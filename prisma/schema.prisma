@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  avatar    String?
+  orgId     String?
+  org       Org?      @relation(fields: [orgId], references: [id])
+  meetings  Meeting[] @relation("UploadedBy")
+  settings  Settings?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Org {
+  id        String    @id @default(cuid())
+  name      String
+  members   User[]
+  meetings  Meeting[]
+  createdAt DateTime  @default(now())
+}
+
+model Meeting {
+  id               String  @id @default(cuid())
+  title            String
+  date             DateTime
+  duration         Int
+  type             String
+  audioUrl         String?   @db.Text
+  transcriptRaw    String?   @db.LongText
+  status           String  @default("processing")
+  healthScore      Int?
+  healthPercentile Float?
+
+  uploadedById String
+  uploadedBy   User    @relation("UploadedBy", fields: [uploadedById], references: [id])
+  orgId        String?
+  org          Org?    @relation(fields: [orgId], references: [id])
+
+  participants    Participant[]
+  topics          Topic[]
+  decisions       Decision[]
+  actionItems     ActionItem[]
+  problems        Problem[]
+  recommendations Recommendation[]
+  transcript      TranscriptSegment[]
+  wasteSegments   WasteSegment[]
+
+  aiSummary   String?   @db.Text
+  aiNarrative String?   @db.Text
+  strengths   String?   @db.Text
+  weaknesses  String?   @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Participant {
+  id           String  @id @default(cuid())
+  name         String
+  email        String?
+  speakingTime Int?
+  speakingPct  Float?
+  sentiment    String?
+  color        String?
+  meetingId    String
+  meeting      Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Topic {
+  id          String  @id @default(cuid())
+  name        String
+  startTime   Int
+  endTime     Int
+  duration    Int
+  valueRating String?
+  keyPoints   String?   @db.Text
+  isDrift     Boolean @default(false)
+  meetingId   String
+  meeting     Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Decision {
+  id         String  @id @default(cuid())
+  text       String  @db.Text
+  owner      String?
+  timestamp  Int
+  confidence Float
+  context    String?   @db.Text
+  meetingId  String
+  meeting    Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model ActionItem {
+  id        String    @id @default(cuid())
+  task      String    @db.Text
+  owner     String?
+  dueDate   DateTime?
+  priority  String?
+  status    String    @default("todo")
+  source    String?   @db.Text
+  meetingId String
+  meeting   Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Problem {
+  id             String  @id @default(cuid())
+  description    String  @db.Text
+  severity       String
+  timeImpact     Int?
+  evidence       String?   @db.Text
+  recommendation String?   @db.Text
+  meetingId      String
+  meeting        Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Recommendation {
+  id        String  @id @default(cuid())
+  text      String  @db.Text
+  category  String?
+  meetingId String
+  meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model TranscriptSegment {
+  id        String  @id @default(cuid())
+  speaker   String
+  text      String  @db.Text
+  startTime Int
+  endTime   Int
+  meetingId String
+  meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model WasteSegment {
+  id          String  @id @default(cuid())
+  startTime   Int
+  endTime     Int
+  type        String
+  description String?   @db.Text
+  valueLevel  Float
+  meetingId   String
+  meeting     Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id                  String  @id @default(cuid())
+  userId              String  @unique
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultMeetingType  String  @default("Team Sync")
+  defaultParticipants String?   @db.Text
+  scoringWeights      String?   @db.Text
+  llmModel            String  @default("gpt-4o")
+  transcriptionLang   String  @default("en")
+  customPrompt        String?   @db.Text
+  theme               String  @default("dark")
+  accentColor         String  @default("#4f7cff")
+}
