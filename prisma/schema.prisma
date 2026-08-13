@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -35,8 +35,8 @@ model Meeting {
   date             DateTime
   duration         Int
   type             String
-  audioUrl         String?   @db.Text
-  transcriptRaw    String?   @db.LongText
+  audioUrl         String?
+  transcriptRaw    String?
   status           String  @default("processing")
   healthScore      Int?
   healthPercentile Float?
@@ -55,10 +55,10 @@ model Meeting {
   transcript      TranscriptSegment[]
   wasteSegments   WasteSegment[]
 
-  aiSummary   String?   @db.Text
-  aiNarrative String?   @db.Text
-  strengths   String?   @db.Text
-  weaknesses  String?   @db.Text
+  aiSummary   String?
+  aiNarrative String?
+  strengths   String?
+  weaknesses  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -83,7 +83,7 @@ model Topic {
   endTime     Int
   duration    Int
   valueRating String?
-  keyPoints   String?   @db.Text
+  keyPoints   String?
   isDrift     Boolean @default(false)
   meetingId   String
   meeting     Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
@@ -91,41 +91,41 @@ model Topic {
 
 model Decision {
   id         String  @id @default(cuid())
-  text       String  @db.Text
+  text       String
   owner      String?
   timestamp  Int
   confidence Float
-  context    String?   @db.Text
+  context    String?
   meetingId  String
   meeting    Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
 }
 
 model ActionItem {
   id        String    @id @default(cuid())
-  task      String    @db.Text
+  task      String
   owner     String?
   dueDate   DateTime?
   priority  String?
   status    String    @default("todo")
-  source    String?   @db.Text
+  source    String?
   meetingId String
   meeting   Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
 }
 
 model Problem {
   id             String  @id @default(cuid())
-  description    String  @db.Text
+  description    String
   severity       String
   timeImpact     Int?
-  evidence       String?   @db.Text
-  recommendation String?   @db.Text
+  evidence       String?
+  recommendation String?
   meetingId      String
   meeting        Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
 }
 
 model Recommendation {
   id        String  @id @default(cuid())
-  text      String  @db.Text
+  text      String
   category  String?
   meetingId String
   meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
@@ -134,7 +134,7 @@ model Recommendation {
 model TranscriptSegment {
   id        String  @id @default(cuid())
   speaker   String
-  text      String  @db.Text
+  text      String
   startTime Int
   endTime   Int
   meetingId String
@@ -146,7 +146,7 @@ model WasteSegment {
   startTime   Int
   endTime     Int
   type        String
-  description String?   @db.Text
+  description String?
   valueLevel  Float
   meetingId   String
   meeting     Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
@@ -157,11 +157,11 @@ model Settings {
   userId              String  @unique
   user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   defaultMeetingType  String  @default("Team Sync")
-  defaultParticipants String?   @db.Text
-  scoringWeights      String?   @db.Text
+  defaultParticipants String?
+  scoringWeights      String?
   llmModel            String  @default("gpt-4o")
   transcriptionLang   String  @default("en")
-  customPrompt        String?   @db.Text
+  customPrompt        String?
   theme               String  @default("dark")
   accentColor         String  @default("#4f7cff")
 }
