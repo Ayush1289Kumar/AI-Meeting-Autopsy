@@ -3,11 +3,11 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ValueAreaChart } from "@/components/charts/area-chart";
 import { TOPIC_COLORS } from "@/lib/constants";
-import { resolvePageMeeting } from "@/lib/page-data";
+import { resolveTopicsMeeting } from "@/lib/page-data";
 import { formatDuration, formatTimestamp } from "@/lib/utils";
 import { driftTime, wastedTime } from "@/services/meeting.service";
 
-export const dynamic = "force-dynamic";
+
 
 function parsePoints(raw: string | null): string[] {
   if (!raw) return [];
@@ -20,7 +20,7 @@ function parsePoints(raw: string | null): string[] {
 }
 
 export default async function TopicsTimelinePage({ searchParams }: { searchParams?: { meeting?: string } }) {
-  const { meeting } = await resolvePageMeeting(searchParams);
+  const { meeting } = await resolveTopicsMeeting(searchParams);
   if (!meeting) return <EmptyState />;
 
   const total = Math.max(meeting.duration, 1);

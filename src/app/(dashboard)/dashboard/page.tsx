@@ -15,7 +15,7 @@ import { resolvePageMeeting, withMeeting } from "@/lib/page-data";
 import { formatDuration } from "@/lib/utils";
 import { driftTime, previousMeeting, speakingBalanceRating, trend, wastedTime } from "@/services/meeting.service";
 
-export const dynamic = "force-dynamic";
+
 
 export default async function DashboardPage({ searchParams }: { searchParams?: { meeting?: string } }) {
   const { user, meeting } = await resolvePageMeeting(searchParams);
@@ -29,8 +29,8 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
 
   const wastePct = meeting.duration ? Math.round((waste / meeting.duration) * 100) : 0;
   const driftPct = meeting.duration ? Math.round((drift / meeting.duration) * 100) : 0;
-  const decisionTrend = trend(meeting.decisions.length, previous?.decisions.length);
-  const actionTrend = trend(meeting.actionItems.length, previous?.actionItems.length);
+  const decisionTrend = trend(meeting.decisions.length, previous?._count.decisions);
+  const actionTrend = trend(meeting.actionItems.length, previous?._count.actionItems);
 
   const stats: StatCard[] = [
     {

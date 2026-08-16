@@ -1,11 +1,11 @@
 import { EmptyState } from "@/components/common/empty-state";
 import { ActionItemsManager } from "@/components/action-items/action-items-manager";
-import { resolvePageMeeting } from "@/lib/page-data";
+import { resolveActionItemsMeeting } from "@/lib/page-data";
 
-export const dynamic = "force-dynamic";
+
 
 export default async function ActionItemsPage({ searchParams }: { searchParams?: { meeting?: string } }) {
-  const { meeting } = await resolvePageMeeting(searchParams);
+  const { meeting } = await resolveActionItemsMeeting(searchParams);
   if (!meeting) return <EmptyState />;
 
   return (

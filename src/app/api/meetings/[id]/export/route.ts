@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMeeting } from "@/services/meeting.service";
-import { meetingToCsv, meetingToHtml, meetingToText } from "@/services/export.service";
+import { meetingToCsv, meetingToHtml } from "@/services/export.service";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const meeting = await getMeeting(params.id);

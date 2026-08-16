@@ -1,11 +1,11 @@
 import { EmptyState } from "@/components/common/empty-state";
 import { TranscriptViewer, type Highlight } from "@/components/transcript/transcript-viewer";
-import { resolvePageMeeting } from "@/lib/page-data";
+import { resolveTranscriptMeeting } from "@/lib/page-data";
 
-export const dynamic = "force-dynamic";
+
 
 export default async function TranscriptPage({ searchParams }: { searchParams?: { meeting?: string } }) {
-  const { meeting } = await resolvePageMeeting(searchParams);
+  const { meeting } = await resolveTranscriptMeeting(searchParams);
   if (!meeting) return <EmptyState />;
 
   const highlights: Highlight[] = [

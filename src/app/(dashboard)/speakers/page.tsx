@@ -2,14 +2,14 @@ import { EmptyState } from "@/components/common/empty-state";
 import { Card, CardHeader } from "@/components/ui/card";
 import { GroupedBarChart } from "@/components/charts/bar-chart";
 import { SpeakerDrilldown } from "@/components/speakers/speaker-drilldown";
-import { resolvePageMeeting } from "@/lib/page-data";
+import { resolveSpeakersMeeting } from "@/lib/page-data";
 import { formatDuration, formatTimestamp, initials } from "@/lib/utils";
 import { speakingBalanceRating } from "@/services/meeting.service";
 
-export const dynamic = "force-dynamic";
+
 
 export default async function SpeakersPage({ searchParams }: { searchParams?: { meeting?: string } }) {
-  const { meeting } = await resolvePageMeeting(searchParams);
+  const { meeting } = await resolveSpeakersMeeting(searchParams);
   if (!meeting) return <EmptyState />;
 
   const balance = speakingBalanceRating(meeting);

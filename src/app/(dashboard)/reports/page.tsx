@@ -3,13 +3,11 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { GroupedBarChart } from "@/components/charts/bar-chart";
 import { TrendLineChart } from "@/components/charts/line-chart";
 import { ReportFilters } from "@/components/reports/report-filters";
+import { Suspense } from "react";
 import { getActiveUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { fullMeetingInclude, wastedTime } from "@/services/meeting.service";
-import { giniCoefficient } from "@/services/health-scoring.service";
 import { formatDuration } from "@/lib/utils";
-
-export const dynamic = "force-dynamic";
+import { giniCoefficient } from "@/services/health-scoring.service";
 
 export default async function ReportsPage({
   searchParams,
@@ -19,95 +17,146 @@ export default async function ReportsPage({
   const user = await getActiveUser();
   if (!user) return <EmptyState />;
 
-  const meetings = await prisma.meeting.findMany({
-    where: {
-      uploadedById: user.id,
-      status: "ready",
-      ...(searchParams?.type && searchParams.type !== "all" ? { type: searchParams.type } : {}),
-      ...(searchParams?.from || searchParams?.to
-        ? {
-            date: {
-              ...(searchParams.from ? { gte: new Date(searchParams.from) } : {}),
-              ...(searchParams.to ? { lte: new Date(searchParams.to) } : {}),
-            },
-          }
-        : {}),
-    },
-    orderBy: { date: "asc" },
-    include: fullMeetingInclude,
-  });
+  const dateFilter = {
+    ...(searchParams?.from ? { gte: new Date(searchParams.from) } : {}),
+    ...(searchParams?.to ? { lte: new Date(searchParams.to) } : {}),
+  };
+  const hasDateFilter = searchParams?.from || searchParams?.to;
+  const typeFilter = searchParams?.type && searchParams.type !== "all" ? searchParams.type : undefined;
 
-  const types = [...new Set(meetings.map((meeting) => meeting.type))];
+  const where = {
+    uploadedById: user.id,
+    status: "ready" as const,
+    ...(typeFilter ? { type: typeFilter } : {}),
+    ...(hasDateFilter ? { date: dateFilter } : {}),
+  };
 
-  if (!meetings.length) {
+  // --- Parallel lightweight queries instead of one massive fullMeetingInclude ---
+  const [
+    meetingsBase,
+    allTypes,
+    aggregateStats,
+  ] = await Promise.all([
+    // Core meeting data + only the counts/lightweight relations we need
+    prisma.meeting.findMany({
+      where,
+      orderBy: { date: "asc" },
+      select: {
+        id: true,
+        date: true,
+        title: true,
+        type: true,
+        duration: true,
+        healthScore: true,
+        participants: { select: { speakingTime: true } },
+        wasteSegments: { select: { startTime: true, endTime: true, valueLevel: true } },
+        _count: { select: { decisions: true, actionItems: true } },
+      },
+    }),
+    // All types for filter dropdown
+    prisma.meeting.findMany({
+      where: { uploadedById: user.id, status: "ready" },
+      select: { type: true },
+      distinct: ["type"],
+    }),
+    // Aggregate stats
+    prisma.meeting.aggregate({
+      where,
+      _count: true,
+      _sum: { duration: true },
+    }),
+  ]);
+
+  // Problems and action items — separate lean queries
+  const [problemRows, actionItemRows] = await Promise.all([
+    prisma.problem.findMany({
+      where: { meeting: where },
+      select: { description: true },
+    }),
+    prisma.actionItem.findMany({
+      where: { meeting: where },
+      select: { status: true, dueDate: true },
+    }),
+  ]);
+
+  const types = allTypes.map((t) => t.type);
+
+  if (!meetingsBase.length) {
     return (
       <div className="space-y-4">
-        <ReportFilters types={types} />
+        <Suspense fallback={<div className="h-10 animate-pulse rounded-lg bg-white/5" />}>
+          <ReportFilters types={types} />
+        </Suspense>
         <EmptyState title="No meetings in range" message="Adjust the filters or analyze a meeting first." />
       </div>
     );
   }
 
-  const healthTrend = meetings.map((meeting) => ({
-    label: meeting.date.toISOString().slice(5, 10),
-    score: meeting.healthScore ?? 0,
+  const healthTrend = meetingsBase.map((m) => ({
+    label: m.date.toISOString().slice(5, 10),
+    score: m.healthScore ?? 0,
   }));
 
-  const durationTrend = meetings.map((meeting) => ({
-    label: meeting.date.toISOString().slice(5, 10),
-    minutes: Math.round(meeting.duration / 60),
+  const durationTrend = meetingsBase.map((m) => ({
+    label: m.date.toISOString().slice(5, 10),
+    minutes: Math.round(m.duration / 60),
   }));
 
-  const balanceTrend = meetings.map((meeting) => ({
-    label: meeting.date.toISOString().slice(5, 10),
-    fairness: Math.round((1 - giniCoefficient(meeting.participants.map((p) => p.speakingTime ?? 0))) * 100),
+  const balanceTrend = meetingsBase.map((m) => ({
+    label: m.date.toISOString().slice(5, 10),
+    fairness: Math.round((1 - giniCoefficient(m.participants.map((p) => p.speakingTime ?? 0))) * 100),
   }));
 
-  const wasteTrend = meetings.map((meeting) => ({
-    label: meeting.date.toISOString().slice(5, 10),
-    waste: meeting.duration ? Math.round((wastedTime(meeting) / meeting.duration) * 100) : 0,
-  }));
+  const wasteTrend = meetingsBase.map((m) => {
+    const waste = m.wasteSegments.reduce(
+      (sum, s) => sum + (s.endTime - s.startTime) * (1 - s.valueLevel),
+      0
+    );
+    return {
+      label: m.date.toISOString().slice(5, 10),
+      waste: m.duration ? Math.round((waste / m.duration) * 100) : 0,
+    };
+  });
 
   const frequency = new Map<string, number>();
-  for (const meeting of meetings) {
-    const key = meeting.date.toISOString().slice(0, 7);
+  for (const m of meetingsBase) {
+    const key = m.date.toISOString().slice(0, 7);
     frequency.set(key, (frequency.get(key) ?? 0) + 1);
   }
 
   const problemCounts = new Map<string, number>();
-  for (const meeting of meetings) {
-    for (const problem of meeting.problems) {
-      const key = problem.description.replace(/\(.*?\)/g, "").replace(/\d+/g, "N").trim();
-      problemCounts.set(key, (problemCounts.get(key) ?? 0) + 1);
-    }
+  for (const p of problemRows) {
+    const key = p.description.replace(/\(.*?\)/g, "").replace(/\d+/g, "N").trim();
+    problemCounts.set(key, (problemCounts.get(key) ?? 0) + 1);
   }
 
-  const decisionTrend = meetings.map((meeting) => ({
-    label: meeting.date.toISOString().slice(5, 10),
-    decisions: meeting.decisions.length,
-    actionItems: meeting.actionItems.length,
+  const decisionTrend = meetingsBase.map((m) => ({
+    label: m.date.toISOString().slice(5, 10),
+    decisions: m._count.decisions,
+    actionItems: m._count.actionItems,
   }));
 
-  const allActionItems = meetings.flatMap((meeting) => meeting.actionItems);
-  const done = allActionItems.filter((item) => item.status === "done").length;
-  const overdue = allActionItems.filter(
+  const done = actionItemRows.filter((item) => item.status === "done").length;
+  const overdue = actionItemRows.filter(
     (item) => item.dueDate && item.status !== "done" && item.dueDate < new Date()
   ).length;
   const averageDuration = Math.round(
-    meetings.reduce((sum, meeting) => sum + meeting.duration, 0) / meetings.length
+    (aggregateStats._sum.duration ?? 0) / Math.max(meetingsBase.length, 1)
   );
 
   return (
     <div className="space-y-4">
-      <ReportFilters types={types} />
+      <Suspense fallback={<div className="h-10 animate-pulse rounded-lg bg-white/5" />}>
+        <ReportFilters types={types} />
+      </Suspense>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: "Meetings analyzed", value: String(meetings.length) },
+          { label: "Meetings analyzed", value: String(meetingsBase.length) },
           { label: "Average duration", value: formatDuration(averageDuration) },
           {
             label: "Action item completion",
-            value: allActionItems.length ? `${Math.round((done / allActionItems.length) * 100)}%` : "—",
+            value: actionItemRows.length ? `${Math.round((done / actionItemRows.length) * 100)}%` : "—",
           },
           { label: "Overdue action items", value: String(overdue) },
         ].map((stat) => (

@@ -2,12 +2,10 @@ import { EmptyState } from "@/components/common/empty-state";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge, severityTone } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { resolvePageMeeting } from "@/lib/page-data";
+import { resolveAutopsyMeeting } from "@/lib/page-data";
 import { formatDuration } from "@/lib/utils";
 import { healthColor } from "@/lib/constants";
 import { previousMeeting, wastedTime } from "@/services/meeting.service";
-
-export const dynamic = "force-dynamic";
 
 function parseList(raw: string | null): string[] {
   if (!raw) return [];
@@ -20,7 +18,7 @@ function parseList(raw: string | null): string[] {
 }
 
 export default async function MeetingAutopsyPage({ searchParams }: { searchParams?: { meeting?: string } }) {
-  const { meeting } = await resolvePageMeeting(searchParams);
+  const { meeting } = await resolveAutopsyMeeting(searchParams);
   if (!meeting) return <EmptyState />;
 
   const previous = await previousMeeting(meeting);
@@ -121,10 +119,10 @@ export default async function MeetingAutopsyPage({ searchParams }: { searchParam
               </div>
               <ul className="space-y-1 text-xs text-muted">
                 <li>
-                  Decisions: {previous.decisions.length} → {meeting.decisions.length}
+                  Decisions: {previous._count.decisions} → {meeting.decisions.length}
                 </li>
                 <li>
-                  Action items: {previous.actionItems.length} → {meeting.actionItems.length}
+                  Action items: {previous._count.actionItems} → {meeting.actionItems.length}
                 </li>
                 <li>
                   Wasted time: {formatDuration(wastedTime(previous))} → {formatDuration(wastedTime(meeting))}

@@ -1,11 +1,11 @@
 import { EmptyState } from "@/components/common/empty-state";
 import { DecisionsManager } from "@/components/decisions/decisions-manager";
-import { resolvePageMeeting } from "@/lib/page-data";
+import { resolveDecisionsMeeting } from "@/lib/page-data";
 
-export const dynamic = "force-dynamic";
+
 
 export default async function DecisionsPage({ searchParams }: { searchParams?: { meeting?: string } }) {
-  const { meeting } = await resolvePageMeeting(searchParams);
+  const { meeting } = await resolveDecisionsMeeting(searchParams);
   if (!meeting) return <EmptyState />;
 
   return (

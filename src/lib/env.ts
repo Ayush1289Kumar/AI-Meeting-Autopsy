@@ -26,9 +26,10 @@ export function getAuthSecret(): string {
 
 // Public / optional env vars — safe to evaluate at module load time.
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-export const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? "";
-export const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-4o";
-export const OPENAI_WHISPER_MODEL = process.env.OPENAI_WHISPER_MODEL ?? "whisper-1";
+export const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY ?? "";
+export const NVIDIA_MODEL = process.env.NVIDIA_MODEL ?? "nvidia/llama-3.1-nemotron-51b-instruct";
+export const WHISPER_API_KEY = process.env.WHISPER_API_KEY ?? "";
+export const WHISPER_MODEL = process.env.WHISPER_MODEL ?? "whisper-1";
 export const MAX_FILE_SIZE_MB = Number(process.env.MAX_FILE_SIZE_MB ?? 500);
 
 // ---------------------------------------------------------------------------
@@ -36,15 +37,19 @@ export const MAX_FILE_SIZE_MB = Number(process.env.MAX_FILE_SIZE_MB ?? 500);
 // These still resolve lazily via the getter functions above.
 // ---------------------------------------------------------------------------
 /** @deprecated Import getDatabaseUrl() instead for clarity. */
-export const DATABASE_URL: string = new Proxy({} as unknown as string, {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const DATABASE_URL: string = new Proxy({} as any, {
   get() {
     return getDatabaseUrl();
   },
-}) as unknown as string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}) as any;
 
 /** @deprecated Import getAuthSecret() instead for clarity. */
-export const AUTH_SECRET: string = new Proxy({} as unknown as string, {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const AUTH_SECRET: string = new Proxy({} as any, {
   get() {
     return getAuthSecret();
   },
-}) as unknown as string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}) as any;

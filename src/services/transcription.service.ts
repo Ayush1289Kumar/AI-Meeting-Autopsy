@@ -1,4 +1,5 @@
-import { getOpenAI, whisperModel } from "@/lib/openai";
+import { whisperModel } from "@/lib/openai";
+import { WHISPER_API_KEY } from "@/lib/env";
 import type { TranscriptSegmentInput } from "@/types";
 
 const SPEAKER_LINE = /^\s*(?:\[?(\d{1,2}:\d{2}(?::\d{2})?)\]?\s*)?([A-Z][\w .'-]{1,40}?)\s*:\s*(.+)$/;
@@ -43,43 +44,68 @@ export function parseTranscriptText(raw: string): TranscriptSegmentInput[] {
   return segments;
 }
 
-/** Transcribes audio with Whisper when configured. Returns null when unavailable. */
+/** Transcribes audio with Hugging Face Inference API. Returns null when unavailable. */
 export async function transcribeAudio(file: File): Promise<TranscriptSegmentInput[] | null> {
-  const openai = getOpenAI();
-  if (!openai) return null;
+  if (!WHISPER_API_KEY) return null;
 
   try {
-    const response = await openai.audio.transcriptions.create({
-      file,
-      model: whisperModel(),
-      response_format: "verbose_json",
-      timestamp_granularities: ["segment"],
-    });
+    const arrayBuffer = await file.arrayBuffer();
+    const model = whisperModel() || "openai/whisper-large-v3";
+    
+    console.log(`[huggingface] transcribing via model: ${model}`);
+    
+    const response = await fetch(
+      `https://api-inference.huggingface.co/models/${model}`,
+      {
+        headers: {
+          Authorization: `Bearer ${WHISPER_API_KEY}`,
+          "Content-Type": file.type || "audio/wav",
+        },
+        method: "POST",
+        body: Buffer.from(arrayBuffer),
+      }
+    );
 
-    const raw = response as unknown as {
-      segments?: { text: string; start: number; end: number }[];
-      text?: string;
-    };
-
-    if (!raw.segments?.length) {
-      return raw.text ? parseTranscriptText(raw.text) : null;
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`Hugging Face inference failed (${response.status}): ${errText}`);
     }
 
-    // Whisper has no diarization: alternate labels on long pauses as a best effort.
-    let speakerIndex = 1;
-    let previousEnd = 0;
-    return raw.segments.map((segment) => {
-      if (segment.start - previousEnd > 2) speakerIndex = (speakerIndex % 4) + 1;
-      previousEnd = segment.end;
-      return {
-        speaker: `Speaker ${speakerIndex}`,
-        text: segment.text.trim(),
-        start: Math.round(segment.start),
-        end: Math.round(segment.end),
-      };
-    });
+    interface HFResponse {
+      text?: string;
+      chunks?: { timestamp: [number, number | null]; text: string }[];
+    }
+
+    const payload = (await response.json()) as HFResponse;
+    
+    if (payload.chunks && payload.chunks.length > 0) {
+      // If Hugging Face returns segmented chunks with timestamps, map them
+      let speakerIndex = 1;
+      let previousEnd = 0;
+      return payload.chunks.map((chunk) => {
+        const start = chunk.timestamp[0];
+        const end = chunk.timestamp[1] ?? (start + 3);
+        if (start - previousEnd > 2) {
+          speakerIndex = (speakerIndex % 4) + 1;
+        }
+        previousEnd = end;
+        return {
+          speaker: `Speaker ${speakerIndex}`,
+          text: chunk.text.trim(),
+          start: Math.round(start),
+          end: Math.round(end),
+        };
+      });
+    }
+
+    if (payload.text) {
+      // Fallback: parse full transcript text into speaker chunks
+      return parseTranscriptText(payload.text);
+    }
+
+    return null;
   } catch (error) {
-    console.error("[transcription] whisper failed", error);
+    console.error("[huggingface] transcription failed", error);
     return null;
   }
 }

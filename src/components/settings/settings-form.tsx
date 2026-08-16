@@ -30,6 +30,11 @@ export function SettingsForm({
   const [values, setValues] = useState<SettingsValues>(settings);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [testingConnection, setTestingConnection] = useState(false);
+  const [testResult, setTestResult] = useState<{
+    nvidia?: { success: boolean; message: string };
+    whisper?: { success: boolean; message: string };
+  } | null>(null);
 
   function set<K extends keyof SettingsValues>(key: K, value: SettingsValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
@@ -48,6 +53,27 @@ export function SettingsForm({
       setSaved(true);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function testConnection() {
+    setTestingConnection(true);
+    setTestResult(null);
+    try {
+      const response = await fetch("/api/settings/test-connection", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: values.llmModel }),
+      });
+      const data = await response.json();
+      setTestResult(data);
+    } catch {
+      setTestResult({
+        nvidia: { success: false, message: "An unexpected error occurred." },
+        whisper: { success: false, message: "An unexpected error occurred." },
+      });
+    } finally {
+      setTestingConnection(false);
     }
   }
 
@@ -107,13 +133,46 @@ export function SettingsForm({
           <div className="grid gap-3">
             <Field label="LLM model">
               <Select value={values.llmModel} onChange={(event) => set("llmModel", event.target.value)}>
-                {["gpt-4o", "gpt-4o-mini", "gpt-4.1", "mock"].map((model) => (
+                {[
+                  "auto",
+                  "nvidia/llama-3.1-nemotron-51b-instruct",
+                  "meta/llama-3.1-70b-instruct",
+                  "mock"
+                ].map((model) => (
                   <option key={model} value={model}>
                     {model}
                   </option>
                 ))}
               </Select>
             </Field>
+            
+            <div className="mt-1 flex flex-col gap-2">
+              <div>
+                <Button type="button" onClick={testConnection} disabled={testingConnection} className="bg-brand/20 border border-brand/40 hover:bg-brand/35 text-white text-xs px-3 py-1">
+                  {testingConnection ? "Testing APIs..." : "Test AI Connections"}
+                </Button>
+              </div>
+              {testResult ? (
+                <div className="grid gap-1 text-xs">
+                  {testResult.nvidia ? (
+                    <div className="flex items-start gap-2">
+                      <span className="text-muted font-medium w-24">LLM (NVIDIA):</span>
+                      <span className={testResult.nvidia.success ? "text-success" : "text-danger"}>
+                        {testResult.nvidia.message}
+                      </span>
+                    </div>
+                  ) : null}
+                  {testResult.whisper ? (
+                    <div className="flex items-start gap-2">
+                      <span className="text-muted font-medium w-24">Audio (Whisper):</span>
+                      <span className={testResult.whisper.success ? "text-success" : "text-danger"}>
+                        {testResult.whisper.message}
+                      </span>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
             <Field label="Transcription language">
               <Input
                 value={values.transcriptionLang}
