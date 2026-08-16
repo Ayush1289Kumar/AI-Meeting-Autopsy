@@ -32,7 +32,7 @@ export function SettingsForm({
   const [saving, setSaving] = useState(false);
   const [testingConnection, setTestingConnection] = useState(false);
   const [testResult, setTestResult] = useState<{
-    nvidia?: { success: boolean; message: string };
+    huggingface?: { success: boolean; message: string };
     whisper?: { success: boolean; message: string };
   } | null>(null);
 
@@ -69,7 +69,7 @@ export function SettingsForm({
       setTestResult(data);
     } catch {
       setTestResult({
-        nvidia: { success: false, message: "An unexpected error occurred." },
+        huggingface: { success: false, message: "An unexpected error occurred." },
         whisper: { success: false, message: "An unexpected error occurred." },
       });
     } finally {
@@ -132,12 +132,19 @@ export function SettingsForm({
           <CardHeader title="AI Settings" />
           <div className="grid gap-3">
             <Field label="LLM model">
-              <Select value={values.llmModel} onChange={(event) => set("llmModel", event.target.value)}>
+              <Select
+                value={
+                  ["auto", "meta-llama/Llama-3.1-8B-Instruct", "meta-llama/Llama-3.1-70B-Instruct", "deepseek-ai/DeepSeek-V3-0324"].includes(values.llmModel)
+                    ? values.llmModel
+                    : "meta-llama/Llama-3.1-8B-Instruct"
+                }
+                onChange={(event) => set("llmModel", event.target.value)}
+              >
                 {[
                   "auto",
-                  "nvidia/llama-3.1-nemotron-51b-instruct",
-                  "meta/llama-3.1-70b-instruct",
-                  "mock"
+                  "meta-llama/Llama-3.1-8B-Instruct",
+                  "meta-llama/Llama-3.1-70B-Instruct",
+                  "deepseek-ai/DeepSeek-V3-0324",
                 ].map((model) => (
                   <option key={model} value={model}>
                     {model}
@@ -154,11 +161,11 @@ export function SettingsForm({
               </div>
               {testResult ? (
                 <div className="grid gap-1 text-xs">
-                  {testResult.nvidia ? (
+                  {testResult.huggingface ? (
                     <div className="flex items-start gap-2">
-                      <span className="text-muted font-medium w-24">LLM (NVIDIA):</span>
-                      <span className={testResult.nvidia.success ? "text-success" : "text-danger"}>
-                        {testResult.nvidia.message}
+                      <span className="text-muted font-medium w-24">LLM (Hugging Face):</span>
+                      <span className={testResult.huggingface.success ? "text-success" : "text-danger"}>
+                        {testResult.huggingface.message}
                       </span>
                     </div>
                   ) : null}

@@ -159,7 +159,7 @@ model Settings {
   defaultMeetingType  String  @default("Team Sync")
   defaultParticipants String?   @db.Text
   scoringWeights      String?   @db.Text
-  llmModel            String  @default("gpt-4o")
+  llmModel            String  @default("meta-llama/Llama-3.1-8B-Instruct")
   transcriptionLang   String  @default("en")
   customPrompt        String?   @db.Text
   theme               String  @default("dark")

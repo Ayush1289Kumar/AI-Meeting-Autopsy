@@ -1,65 +1,85 @@
 import OpenAI from "openai";
-import { NVIDIA_API_KEY, NVIDIA_MODEL, WHISPER_API_KEY, WHISPER_MODEL } from "@/lib/env";
+import { HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, WHISPER_API_KEY, WHISPER_MODEL } from "@/lib/env";
 
 let client: OpenAI | null = null;
 let cachedModel: string | null = null;
 
 export function isAIEnabled(): boolean {
-  return Boolean(NVIDIA_API_KEY);
+  return Boolean(HUGGINGFACE_API_KEY);
 }
 
 export function getOpenAI(): OpenAI | null {
   if (!isAIEnabled()) return null;
   if (!client) {
     client = new OpenAI({
-      apiKey: NVIDIA_API_KEY,
-      baseURL: "https://integrate.api.nvidia.com/v1",
+      apiKey: HUGGINGFACE_API_KEY,
+      baseURL: "https://router.huggingface.co/v1",
+      timeout: 30000,
     });
   }
   return client;
 }
 
 /**
- * Dynamically lists models from NVIDIA NIM and auto-selects the best available
- * Llama or Nemotron model, falling back to env/default.
+ * Dynamically lists models from Hugging Face and auto-selects the best available
+ * model, falling back to meta-llama/Llama-3.1-8B-Instruct.
  */
 export async function getActiveModelName(requested?: string): Promise<string> {
-  if (requested && requested !== "auto") return requested;
+  const isInvalid = (m?: string) => !m || m === "auto" || m === "mock" || m.toLowerCase().includes("gpt-");
+
+  if (requested && !isInvalid(requested)) return requested;
+  if (HUGGINGFACE_MODEL && !isInvalid(HUGGINGFACE_MODEL)) return HUGGINGFACE_MODEL;
   if (cachedModel) return cachedModel;
 
   const openai = getOpenAI();
-  if (!openai) return NVIDIA_MODEL;
+  if (!openai) return "meta-llama/Llama-3.1-8B-Instruct";
 
   try {
     const list = await openai.models.list();
     const ids = list.data.map((m) => m.id);
 
-    // Filter and prioritize
-    const preferred = ids.find((id) =>
-      id.includes("nemotron-70b") ||
-      id.includes("nemotron-51b") ||
-      id.includes("llama-3.1-70b") ||
-      id.includes("llama3-70b") ||
-      id.includes("llama-3.1")
-    ) || ids.find((id) => id.includes("llama") || id.includes("nemotron")) || ids[0];
+    // Prioritize active and fast models on Hugging Face
+    const preferred =
+      ids.find((id) => id === "meta-llama/Llama-3.1-8B-Instruct") ||
+      ids.find((id) => id === "deepseek-ai/DeepSeek-V3-0324") ||
+      ids.find((id) => id.includes("Llama-3.1-8B") || id.includes("Llama-3")) ||
+      ids[0];
 
     if (preferred) {
       cachedModel = preferred;
       return preferred;
     }
   } catch (err) {
-    console.error("[nvidia] failed to auto-select model, using fallback", err);
+    console.error("[huggingface] failed to auto-select model, using fallback", err);
   }
 
-  return NVIDIA_MODEL;
+  return "meta-llama/Llama-3.1-8B-Instruct";
 }
 
 export function chatModel(): string {
-  return NVIDIA_MODEL;
+  return !HUGGINGFACE_MODEL || HUGGINGFACE_MODEL === "auto" || HUGGINGFACE_MODEL.toLowerCase().includes("gpt-")
+    ? "meta-llama/Llama-3.1-8B-Instruct"
+    : HUGGINGFACE_MODEL;
 }
 
 export function whisperModel(): string {
-  return WHISPER_MODEL;
+  return WHISPER_MODEL || "openai/whisper-large-v3";
+}
+
+function parseJsonSafe<T>(content: string): T | null {
+  try {
+    return JSON.parse(content) as T;
+  } catch {
+    const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonMatch) {
+      try {
+        return JSON.parse(jsonMatch[1]) as T;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
 }
 
 /** Calls the chat model expecting a JSON object response; returns null when AI is unavailable or fails. */
@@ -75,12 +95,13 @@ export async function jsonCompletion<T>(system: string, user: string): Promise<T
         { role: "system", content: system },
         { role: "user", content: user },
       ],
+      temperature: 0.2,
     });
     const content = response.choices[0]?.message?.content;
     if (!content) return null;
-    return JSON.parse(content) as T;
+    return parseJsonSafe<T>(content);
   } catch (error) {
-    console.error("[nvidia] completion failed, falling back to heuristics", error);
+    console.error("[huggingface] completion failed, falling back to heuristics", error);
     return null;
   }
 }

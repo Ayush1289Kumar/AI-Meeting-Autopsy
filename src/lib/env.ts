@@ -26,10 +26,10 @@ export function getAuthSecret(): string {
 
 // Public / optional env vars — safe to evaluate at module load time.
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-export const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY ?? "";
-export const NVIDIA_MODEL = process.env.NVIDIA_MODEL ?? "nvidia/llama-3.1-nemotron-51b-instruct";
+export const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY ?? "";
+export const HUGGINGFACE_MODEL = process.env.HUGGINGFACE_MODEL ?? "meta-llama/Llama-3.1-8B-Instruct";
 export const WHISPER_API_KEY = process.env.WHISPER_API_KEY ?? "";
-export const WHISPER_MODEL = process.env.WHISPER_MODEL ?? "whisper-1";
+export const WHISPER_MODEL = process.env.WHISPER_MODEL ?? "openai/whisper-large-v3";
 export const MAX_FILE_SIZE_MB = Number(process.env.MAX_FILE_SIZE_MB ?? 500);
 
 // ---------------------------------------------------------------------------

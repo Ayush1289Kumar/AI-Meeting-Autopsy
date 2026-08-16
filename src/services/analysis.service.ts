@@ -137,44 +137,51 @@ export async function persistAnalysis(meetingId: string, userId: string, analysi
       })),
     }),
     prisma.topic.createMany({
-      data: analysis.topics.map((topic) => ({
-        meetingId,
-        name: topic.name,
-        startTime: topic.startTime,
-        endTime: topic.endTime,
-        duration: topic.endTime - topic.startTime,
-        valueRating: topic.valueRating,
-        keyPoints: JSON.stringify(topic.keyPoints ?? []),
-        isDrift: Boolean(topic.isDrift),
-      })),
+      data: analysis.topics.map((topic) => {
+        const start = Number(topic.startTime) || 0;
+        const end = Number(topic.endTime) || 0;
+        return {
+          meetingId,
+          name: topic.name,
+          startTime: start,
+          endTime: end,
+          duration: end - start,
+          valueRating: topic.valueRating,
+          keyPoints: JSON.stringify(topic.keyPoints ?? []),
+          isDrift: Boolean(topic.isDrift),
+        };
+      }),
     }),
     prisma.decision.createMany({
       data: analysis.decisions.map((decision) => ({
         meetingId,
         text: decision.text,
         owner: decision.owner ?? null,
-        timestamp: decision.timestamp,
-        confidence: decision.confidence,
+        timestamp: Number(decision.timestamp) || 0,
+        confidence: Number(decision.confidence) || 0.8,
         context: decision.context ?? null,
       })),
     }),
     prisma.actionItem.createMany({
-      data: analysis.actionItems.map((item) => ({
-        meetingId,
-        task: item.task,
-        owner: item.owner ?? null,
-        dueDate: item.dueDate ? new Date(item.dueDate) : null,
-        priority: item.priority ?? "medium",
-        status: item.owner ? item.status ?? "todo" : "no_owner",
-        source: item.source ?? null,
-      })),
+      data: analysis.actionItems.map((item) => {
+        const parsedDate = item.dueDate ? new Date(item.dueDate) : null;
+        return {
+          meetingId,
+          task: item.task,
+          owner: item.owner ?? null,
+          dueDate: parsedDate && !isNaN(parsedDate.getTime()) ? parsedDate : null,
+          priority: item.priority ?? "medium",
+          status: item.owner ? item.status ?? "todo" : "no_owner",
+          source: item.source ?? null,
+        };
+      }),
     }),
     prisma.problem.createMany({
       data: analysis.problems.map((problem) => ({
         meetingId,
         description: problem.description,
         severity: problem.severity,
-        timeImpact: problem.timeImpact ?? null,
+        timeImpact: problem.timeImpact ? Number(problem.timeImpact) : null,
         evidence: problem.evidence ?? null,
         recommendation: problem.recommendation ?? null,
       })),
@@ -198,11 +205,11 @@ export async function persistAnalysis(meetingId: string, userId: string, analysi
     prisma.wasteSegment.createMany({
       data: analysis.wasteSegments.map((segment) => ({
         meetingId,
-        startTime: segment.startTime,
-        endTime: segment.endTime,
+        startTime: Number(segment.startTime) || 0,
+        endTime: Number(segment.endTime) || 0,
         type: segment.type,
         description: segment.description ?? null,
-        valueLevel: segment.valueLevel,
+        valueLevel: Number(segment.valueLevel) || 0,
       })),
     }),
     prisma.meeting.update({

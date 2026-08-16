@@ -55,11 +55,12 @@ export async function transcribeAudio(file: File): Promise<TranscriptSegmentInpu
     console.log(`[huggingface] transcribing via model: ${model}`);
     
     const response = await fetch(
-      `https://api-inference.huggingface.co/models/${model}`,
+      `https://router.huggingface.co/hf-inference/models/${model}`,
       {
         headers: {
           Authorization: `Bearer ${WHISPER_API_KEY}`,
           "Content-Type": file.type || "audio/wav",
+          "x-wait-for-model": "true",
         },
         method: "POST",
         body: Buffer.from(arrayBuffer),
