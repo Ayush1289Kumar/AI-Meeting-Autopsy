@@ -693,41 +693,8 @@
       "why": "bridges separate communities"
     }
   ],
-  "questions": [
-    {
-      "type": "bridge_node",
-      "question": "Why does `prisma` connect `getActiveUser` to `meeting.service.ts`, `dashboard/page.tsx`, `analysis.service.ts`, `constants.ts`, `app-shell.tsx`?",
-      "why": "High betweenness centrality (0.049) - this node is a cross-community bridge."
-    },
-    {
-      "type": "bridge_node",
-      "question": "Why does `getActiveUser` connect `getActiveUser` to `meeting.service.ts`, `dashboard/page.tsx`, `analysis.service.ts`, `constants.ts`, `app-shell.tsx`?",
-      "why": "High betweenness centrality (0.031) - this node is a cross-community bridge."
-    },
-    {
-      "type": "bridge_node",
-      "question": "Why does `formatTimestamp()` connect `dashboard/page.tsx` to `meeting.service.ts`, `decisions-manager.tsx`, `analysis.service.ts`?",
-      "why": "High betweenness centrality (0.016) - this node is a cross-community bridge."
-    },
-    {
-      "type": "isolated_nodes",
-      "question": "What connects `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended` to the rest of the system?",
-      "why": "141 weakly-connected nodes found - possible documentation gaps or missing edges."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `getActiveUser` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.056338028169014086 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `meeting.service.ts` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.052313883299798795 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `decisions-manager.tsx` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.07738095238095238 - nodes in this community are weakly interconnected."
-    }
-  ]
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
 }
