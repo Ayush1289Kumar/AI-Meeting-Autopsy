@@ -9,3 +9,4 @@ npx prisma db seed
 
 # 4. Start the dev server
 npm run dev
+ npx

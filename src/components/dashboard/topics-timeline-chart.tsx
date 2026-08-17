@@ -26,7 +26,7 @@ export function TopicsTimelineChart({
   const data = topics.map((topic, index) => ({
     name: topic.name,
     value: Math.max(topic.duration, 1),
-    color: topic.isDrift ? "#ef4444" : TOPIC_COLORS[index % TOPIC_COLORS.length],
+    color: topic.isDrift ? "#f87171" : TOPIC_COLORS[index % TOPIC_COLORS.length],
     label: formatDuration(topic.duration),
   }));
 
@@ -45,7 +45,7 @@ export function TopicsTimelineChart({
             <span
               aria-hidden
               className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: topic.isDrift ? "#ef4444" : TOPIC_COLORS[index % TOPIC_COLORS.length] }}
+              style={{ backgroundColor: topic.isDrift ? "#f87171" : TOPIC_COLORS[index % TOPIC_COLORS.length] }}
             />
             <span className="flex-1 text-white">{topic.name}</span>
             <span className="text-muted">

@@ -30,7 +30,7 @@ export function MeetingOverviewCard({
               {row.icon}
               {row.label}
             </dt>
-            <dd className="text-sm font-medium text-white">{row.value}</dd>
+            <dd className="font-display text-sm font-semibold tracking-tight text-white">{row.value}</dd>
           </div>
         ))}
       </dl>

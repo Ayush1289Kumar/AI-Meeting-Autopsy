@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export function Progress({ value, color = "#4f7cff", className }: { value: number; color?: string; className?: string }) {
+export function Progress({ value, color = "#8b5cf6", className }: { value: number; color?: string; className?: string }) {
   return (
     <div className={cn("h-2 w-full overflow-hidden rounded-full bg-white/10", className)}>
       <div

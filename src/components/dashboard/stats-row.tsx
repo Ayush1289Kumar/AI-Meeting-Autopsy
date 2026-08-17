@@ -19,11 +19,28 @@ const ICONS = {
 };
 
 const TONES = {
-  blue: "text-brand",
+  blue: "text-blue",
   green: "text-success",
   yellow: "text-warning",
   red: "text-danger",
   orange: "text-orange",
+};
+
+/* Flat translucent icon-chip fills (kept subtle — no hard gradients) */
+const CHIP = {
+  blue: "bg-blue/15",
+  green: "bg-success/15",
+  yellow: "bg-warning/15",
+  red: "bg-danger/15",
+  orange: "bg-orange/15",
+};
+
+const GLOW = {
+  blue: "shadow-[0_0_20px_-6px_rgba(61,139,255,0.7)]",
+  green: "shadow-[0_0_20px_-6px_rgba(16,185,129,0.7)]",
+  yellow: "shadow-[0_0_20px_-6px_rgba(245,185,75,0.55)]",
+  red: "shadow-[0_0_20px_-6px_rgba(248,113,113,0.6)]",
+  orange: "shadow-[0_0_20px_-6px_rgba(251,176,100,0.6)]",
 };
 
 export function StatsRow({ stats }: { stats: StatCard[] }) {
@@ -32,12 +49,22 @@ export function StatsRow({ stats }: { stats: StatCard[] }) {
       {stats.map((stat) => {
         const Icon = ICONS[stat.icon];
         return (
-          <div key={stat.label} className="card-surface">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs text-muted">{stat.label}</span>
-              <Icon size={15} className={TONES[stat.tone]} />
+          <div key={stat.label} className="card-surface overflow-hidden">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="flex items-center gap-2.5">
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${CHIP[stat.tone]} ${GLOW[stat.tone]}`}
+                >
+                  <Icon size={15} className={TONES[stat.tone]} />
+                </span>
+                <span className="text-xs font-medium text-muted">{stat.label}</span>
+              </span>
             </div>
-            <p className="text-xl font-semibold text-white">{stat.value}</p>
+            <p
+              className={`font-display text-2xl font-bold tracking-tight ${TONES[stat.tone]} drop-shadow-[0_0_14px_rgba(255,255,255,0.18)]`}
+            >
+              {stat.value}
+            </p>
             <p className={cn("mt-1 flex items-center gap-1 text-[11px]", TONES[stat.tone])}>
               {stat.trend ? (
                 stat.trend.direction === "up" ? (

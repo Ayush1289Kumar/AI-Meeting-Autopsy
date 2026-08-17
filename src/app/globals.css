@@ -8,7 +8,8 @@
 
 html,
 body {
-  background-color: #0f1117;
+  background: linear-gradient(180deg, #080b1c 0%, #050816 55%, #040614 100%);
+  background-attachment: fixed;
   color: #ffffff;
 }
 
@@ -20,6 +21,12 @@ html.light body {
 
 body {
   font-size: 14px;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+  color: #fff;
 }
 
 ::-webkit-scrollbar {
@@ -27,17 +34,195 @@ body {
   height: 10px;
 }
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: #2a2b3d;
+  background: #23263a;
   border-radius: 8px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: #30344f;
+}
+
+@layer base {
+  /* Display type for headings — Space Grotesk, tight tracking, strong weight */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    line-height: 1.12;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  h3,
+  h4 {
+    font-weight: 600;
+  }
+
+  body {
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
+}
+
 @layer components {
+  /* Glassmorphism card surface — dark translucent navy, subtle glow rim */
   .card-surface {
-    @apply rounded-card border border-border bg-card p-5 transition-colors hover:bg-card-hover;
+    @apply relative rounded-card border p-5 transition-all duration-300;
+    border-color: rgba(134, 158, 224, 0.14);
+    background: linear-gradient(
+        180deg,
+        rgba(139, 92, 246, 0.045),
+        rgba(34, 211, 238, 0.015) 55%
+      ),
+      rgba(8, 11, 28, 0.66);
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 22px 55px -38px rgba(0, 0, 0, 0.7),
+      0 0 42px -30px rgba(139, 92, 246, 0.35);
+  }
+
+  .card-surface:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 26px 60px -34px rgba(0, 0, 0, 0.7),
+      0 0 64px -32px rgba(139, 92, 246, 0.75);
+  }
+
+  .card-surface::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      rgba(139, 92, 246, 0.35),
+      rgba(34, 211, 238, 0.08) 45%,
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.45;
   }
 
   .section-title {
-    @apply flex items-center gap-2 text-sm font-semibold text-white;
+    @apply flex items-center gap-2 font-display text-sm font-semibold tracking-tight text-white;
+  }
+
+  /* Frosted glass panel used by sidebar / header */
+  .glass-panel {
+    border-color: rgba(134, 158, 224, 0.12);
+    background: rgba(6, 8, 21, 0.66);
+    backdrop-filter: blur(18px) saturate(150%);
+  }
+
+  /* Gradient neon text — used sparingly for brand moments */
+  .text-gradient {
+    background: linear-gradient(90deg, #8b5cf6, #22d3ee 60%, #10b981);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Faint futuristic engineering grid overlay */
+  .grid-overlay {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 30%, transparent 100%);
+  }
+
+  /* Animated shimmering border for hero / promo surfaces */
+  .shimmer-border {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      rgba(34, 211, 238, 0.12) 50%,
+      transparent 70%
+    );
+    background-size: 250% 100%;
+    animation: shimmer 4.5s linear infinite;
+    pointer-events: none;
   }
 }
+/* ==========================================================================
+   Explicit keyframes for the AI orb / brand signature visual.
+   Kept outside Tailwind layers so they are ALWAYS emitted (Tailwind only
+   emits config keyframes when the matching `animate-*` utility is used,
+   so arbitrary [animation:...] properties silently fail to run).
+   ========================================================================== */
+@keyframes da-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes da-orb-activate {
+  0% {
+    opacity: 0;
+    transform: scale(0.62);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes da-core-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.da-orbit-a {
+  animation: da-orbit 16s linear infinite;
+}
+.da-orbit-b {
+  animation: da-orbit 11s linear infinite reverse;
+}
+.da-orb-activate {
+  animation: da-orb-activate 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.da-core-pulse {
+  animation: da-core-pulse 3.4s ease-in-out infinite;
+}
+

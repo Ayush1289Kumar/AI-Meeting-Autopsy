@@ -36,14 +36,14 @@ export const MAX_FILE_SIZE_MB = Number(process.env.MAX_FILE_SIZE_MB ?? 500);
 // These still resolve lazily via the getter functions above.
 // ---------------------------------------------------------------------------
 /** @deprecated Import getDatabaseUrl() instead for clarity. */
-export const DATABASE_URL: string = new Proxy({} as unknown as string, {
+export const DATABASE_URL: string = new Proxy({}, {
   get() {
     return getDatabaseUrl();
   },
 }) as unknown as string;
 
 /** @deprecated Import getAuthSecret() instead for clarity. */
-export const AUTH_SECRET: string = new Proxy({} as unknown as string, {
+export const AUTH_SECRET: string = new Proxy({}, {
   get() {
     return getAuthSecret();
   },
