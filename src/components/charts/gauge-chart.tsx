@@ -21,6 +21,7 @@ export function GaugeChart({ score, color }: { score: number; color: string }) {
             outerRadius="95%"
             stroke="none"
             cornerRadius={6}
+            isAnimationActive={false}
           >
             <Cell fill={color} style={{ filter: `drop-shadow(0 0 6px ${color}aa)` }} />
             <Cell fill="#1b2540" />

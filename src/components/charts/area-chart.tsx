@@ -47,6 +47,7 @@ export function ValueAreaChart({ data, height = 180 }: { data: AreaPoint[]; heig
             stroke="#34d399"
             strokeWidth={2.5}
             fill="url(#valueGradient)"
+            isAnimationActive={false}
             style={{ filter: "drop-shadow(0 0 6px rgba(52,211,153,0.6))" }}
           />
         </RechartsAreaChart>

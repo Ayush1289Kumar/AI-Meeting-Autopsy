@@ -33,7 +33,7 @@ export function GroupedBarChart({
           />
           {bars.length > 1 ? <Legend wrapperStyle={{ fontSize: 11, color: "#8b8d9e" }} /> : null}
           {bars.map((bar) => (
-            <Bar key={bar.key} dataKey={bar.key} name={bar.name} fill={bar.color} radius={[4, 4, 0, 0]} />
+            <Bar key={bar.key} dataKey={bar.key} name={bar.name} fill={bar.color} radius={[4, 4, 0, 0]} isAnimationActive={false} />
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>

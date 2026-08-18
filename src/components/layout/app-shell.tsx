@@ -9,19 +9,15 @@ import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 function ShellInner({ userName, children }: { userName: string; children: React.ReactNode }) {
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-canvas">
-      {/* Ambient futuristic background — animated aurora glows + grid */}
+      {/* Ambient futuristic background — static aurora glows + grid.
+          The glows are intentionally static: animating huge blur(140px)
+          layers (opacity + transform) forces constant expensive repaints. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <NeuralBackground />
         <div className="grid-overlay absolute inset-0" />
-        <div className="absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-brand/25 blur-[140px] animate-aurora" />
-        <div
-          className="absolute -right-32 top-1/3 h-[440px] w-[440px] rounded-full bg-blue/20 blur-[140px] animate-aurora"
-          style={{ animationDelay: "-4s" }}
-        />
-        <div
-          className="absolute bottom-0 left-1/3 h-[420px] w-[420px] rounded-full bg-accent/10 blur-[150px] animate-aurora"
-          style={{ animationDelay: "-8s" }}
-        />
+        <div className="absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-brand/25 blur-[140px]" />
+        <div className="absolute -right-32 top-1/3 h-[440px] w-[440px] rounded-full bg-blue/20 blur-[140px]" />
+        <div className="absolute bottom-0 left-1/3 h-[420px] w-[420px] rounded-full bg-accent/10 blur-[150px]" />
       </div>
 
       <Sidebar />

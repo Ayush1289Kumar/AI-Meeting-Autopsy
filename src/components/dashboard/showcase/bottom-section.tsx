@@ -30,6 +30,7 @@ function SpeakingDonut() {
               paddingAngle={2}
               stroke="none"
               cornerRadius={4}
+              isAnimationActive={false}
             >
               {data.map((d) => (
                 <Cell key={d.name} fill={d.color} style={{ filter: `drop-shadow(0 0 5px ${d.color}66)` }} />

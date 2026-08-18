@@ -33,6 +33,7 @@ export function MeetingIntro({ onComplete = () => {} }) {
   const rafRef = useRef(0);
   const skipTimerRef = useRef(null);
   const doneTimerRef = useRef(null);
+  const lastDrawRef = useRef(0);
   const startRef = useRef(0);
   const sceneRef = useRef({ particles: [], w: 0, h: 0, cx: 0, cy: 0 });
 
@@ -42,6 +43,25 @@ export function MeetingIntro({ onComplete = () => {} }) {
   const [reduced, setReduced] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [done, setDone] = useState(false);
+  // Play the intro at most once per browser session — it mounts its own
+  // full-screen canvas + CSS choreography, and replaying it on every page
+  // load is a big part of why the initial load feels laggy on repeat visits.
+  const [skipped] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return sessionStorage.getItem("ai-ma-intro-played") === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("ai-ma-intro-played", "1");
+    } catch {
+      /* private-mode / storage unavailable: just play the intro */
+    }
+  }, []);
 
   // --- detect prefers-reduced-motion ------------------------------------
   useEffect(() => {
@@ -151,8 +171,15 @@ export function MeetingIntro({ onComplete = () => {} }) {
   }, []);
 
   const loop = useCallback(() => {
-    const elapsed = (performance.now() - startRef.current) / 1000;
-    draw(elapsed);
+    // Throttle to ~30fps (and pause when the tab is hidden): the cinematic
+    // effect reads the same at half the canvas work, which softens the
+    // first-paint cost while the dashboard is also mounting underneath.
+    const now = performance.now();
+    if (!document.hidden && now - lastDrawRef.current >= 33) {
+      lastDrawRef.current = now;
+      const elapsed = (performance.now() - startRef.current) / 1000;
+      draw(elapsed);
+    }
     rafRef.current = requestAnimationFrame(loop);
   }, [draw]);
 // --- canvas setup + resize + render loop -----------------------------
@@ -206,7 +233,7 @@ export function MeetingIntro({ onComplete = () => {} }) {
     };
   }, [reduced, beginExit]);
 
-  if (done) return null;
+  if (skipped || done) return null;
 
   // ----- Reduced motion: elegant, minimal, short -----
   if (reduced) {

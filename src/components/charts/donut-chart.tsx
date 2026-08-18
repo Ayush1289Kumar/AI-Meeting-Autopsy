@@ -24,7 +24,7 @@ export function DonutChart({
     <div className="relative" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Pie data={data} dataKey="value" innerRadius="62%" outerRadius="90%" paddingAngle={2} stroke="none">
+          <Pie data={data} dataKey="value" innerRadius="62%" outerRadius="90%" paddingAngle={2} stroke="none" isAnimationActive={false}>
             {data.map((entry) => (
               <Cell
                 key={entry.name}

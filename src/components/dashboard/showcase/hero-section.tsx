@@ -40,15 +40,14 @@ export function HeroSection() {
 
   return (
     <GlassCard className="relative overflow-hidden !p-6 md:!p-8">
-      {/* soft ambient wash behind hero */}
+      {/* soft ambient wash behind hero (static — see app-shell comment) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand/15 blur-[110px] animate-aurora"
+        className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand/15 blur-[110px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-24 right-1/4 h-64 w-64 rounded-full bg-accent/10 blur-[100px] animate-aurora"
-        style={{ animationDelay: "-6s" }}
+        className="pointer-events-none absolute -bottom-24 right-1/4 h-64 w-64 rounded-full bg-accent/10 blur-[100px]"
       />
 
       <div className="relative grid items-center gap-10 lg:grid-cols-[1.15fr_1fr]">

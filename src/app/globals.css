@@ -81,21 +81,26 @@ body {
 }
 
 @layer components {
-  /* Glassmorphism card surface — dark translucent navy, subtle glow rim */
+  /* Glossy card surface — dark translucent navy, subtle glow rim.
+     NOTE: no backdrop-filter here. With the ambient canvas animating behind
+     the cards, every backdrop-filter layer would re-sample the backdrop at
+     60fps — the single most expensive thing on the page. A slightly more
+     opaque background keeps the same look with zero compositing cost. */
   .card-surface {
-    @apply relative rounded-card border p-5 transition-all duration-300;
+    @apply relative rounded-card border p-5;
     border-color: rgba(134, 158, 224, 0.14);
     background: linear-gradient(
         180deg,
         rgba(139, 92, 246, 0.045),
         rgba(34, 211, 238, 0.015) 55%
       ),
-      rgba(8, 11, 28, 0.66);
-    backdrop-filter: blur(14px) saturate(140%);
+      rgba(8, 11, 28, 0.86);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.04),
       0 22px 55px -38px rgba(0, 0, 0, 0.7),
       0 0 42px -30px rgba(139, 92, 246, 0.35);
+    /* Animate only cheap properties (avoid layout/paint-heavy transitions) */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card-surface:hover {
@@ -129,11 +134,13 @@ body {
     @apply flex items-center gap-2 font-display text-sm font-semibold tracking-tight text-white;
   }
 
-  /* Frosted glass panel used by sidebar / header */
+  /* Frosted glass panel used by sidebar / header.
+     Kept (only 2-3 persistent elements) but the blur radius is reduced —
+     large blur radii on composited layers are expensive to rasterize. */
   .glass-panel {
     border-color: rgba(134, 158, 224, 0.12);
-    background: rgba(6, 8, 21, 0.66);
-    backdrop-filter: blur(18px) saturate(150%);
+    background: rgba(6, 8, 21, 0.72);
+    backdrop-filter: blur(10px) saturate(120%);
   }
 
   /* Gradient neon text — used sparingly for brand moments */
@@ -224,5 +231,21 @@ body {
 }
 .da-core-pulse {
   animation: da-core-pulse 3.4s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Performance & accessibility: honor prefers-reduced-motion globally.
+   Kills the infinite decorative animations (aurora blobs, glow pulses,
+   shimmer) and turns hover transitions into near-instant fades, which both
+   respects user preferences and removes constant GPU/paint work.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 

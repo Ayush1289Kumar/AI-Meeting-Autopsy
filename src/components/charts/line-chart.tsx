@@ -34,7 +34,7 @@ export function TrendLineChart({
             contentStyle={{ background: "rgba(8,11,28,0.95)", border: "1px solid rgba(134,158,224,0.16)", borderRadius: 8, fontSize: 12 }}
             formatter={(value) => [`${value}${suffix}`, dataKey]}
           />
-          <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={{ r: 3 }} />
+          <Line type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
         </RechartsLineChart>
       </ResponsiveContainer>
     </div>
