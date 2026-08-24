@@ -43,25 +43,37 @@ export function MeetingIntro({ onComplete = () => {} }) {
   const [reduced, setReduced] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [done, setDone] = useState(false);
-  // Play the intro at most once per browser session — it mounts its own
-  // full-screen canvas + CSS choreography, and replaying it on every page
-  // load is a big part of why the initial load feels laggy on repeat visits.
-  const [skipped] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return sessionStorage.getItem("ai-ma-intro-played") === "1";
-    } catch {
-      return false;
-    }
-  });
+  // Play the intro at most once per browser session.
+  // IMPORTANT: this decision happens AFTER mount (never during SSR) — reading
+  // sessionStorage in useState's initializer made the server render the full
+  // overlay while the client rendered null -> hydration mismatch -> an
+  // orphaned, click-blocking fullscreen layer no timer could remove.
+  //
+  // The "played" flag is also written only WHEN THE INTRO FINISHES (not up
+  // front): under React StrictMode dev, effects double-fire, so marking it
+  // during the decision effect would immediately cancel the intro.
+  const INTRO_KEY = "ai-ma-intro-played";
+  const [phase, setPhase] = useState("pending"); // "pending" | "play" | "skipped"
 
   useEffect(() => {
+    let played = false;
     try {
-      sessionStorage.setItem("ai-ma-intro-played", "1");
+      played = sessionStorage.getItem(INTRO_KEY) === "1";
     } catch {
       /* private-mode / storage unavailable: just play the intro */
     }
+    setPhase(played ? "skipped" : "play");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!done) return;
+    try {
+      sessionStorage.setItem(INTRO_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  }, [done]);
 
   // --- detect prefers-reduced-motion ------------------------------------
   useEffect(() => {
@@ -95,6 +107,10 @@ export function MeetingIntro({ onComplete = () => {} }) {
       }
     }, EXIT_MS);
   }, [leaving]);
+  // Keep a stable handle so the auto-finish timer below can always call the
+  // latest beginExit without depending on its (changing) identity.
+  const beginExitRef = useRef(beginExit);
+  beginExitRef.current = beginExit;
 
   // --- lightweight particle scene ---------------------------------------
   const setupScene = useCallback((w, h) => {
@@ -220,20 +236,26 @@ export function MeetingIntro({ onComplete = () => {} }) {
   }, [reduced, setupScene, loop]);
 
   // --- auto-finish: full timeline (or short fade for reduced motion) ---
+  // Runs ONCE per reduced-motion change. Depending on `beginExit` here (its
+  // identity changes when `leaving` flips) made this effect re-run on skip,
+  // and its cleanup then destroyed the 380ms completion timer that skip had
+  // just scheduled — so the intro could never actually dismiss.
   useEffect(() => {
-    if (reduced) {
-      doneTimerRef.current = setTimeout(beginExit, 1150);
-    } else {
-      doneTimerRef.current = setTimeout(beginExit, TOTAL_MS);
-    }
+    doneTimerRef.current = setTimeout(() => beginExitRef.current(), reduced ? 1150 : TOTAL_MS);
     return () => {
       if (doneTimerRef.current) clearTimeout(doneTimerRef.current);
+    };
+  }, [reduced]);
+
+  // Unmount-only cleanup: cancel the canvas loop and any in-flight exit timer.
+  useEffect(() => {
+    return () => {
       if (skipTimerRef.current) clearTimeout(skipTimerRef.current);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [reduced, beginExit]);
+  }, []);
 
-  if (skipped || done) return null;
+  if (phase !== "play" || done) return null;
 
   // ----- Reduced motion: elegant, minimal, short -----
   if (reduced) {

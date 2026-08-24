@@ -14,12 +14,19 @@
   overflow: hidden;
   display: grid;
   place-items: center;
-  pointer-events: auto;
+  /* Purely decorative: the overlay must NEVER intercept input. Only the
+     skip button re-enables pointer events. This guarantees the dashboard
+     stays interactive even if the intro's exit logic ever fails. */
+  pointer-events: none;
   font-family: var(--font-display);
   letter-spacing: 0.04em;
   -webkit-user-select: none;
   user-select: none;
   color: #dbe2ff;
+}
+.mi-root .mi-skip,
+.mi-reduced-root .mi-reduced-skip {
+  pointer-events: auto;
 }
 .mi-root.mi-exit {
   animation: mi-exit 0.4s ease forwards;
@@ -290,6 +297,7 @@
   z-index: 9990;
   display: grid;
   place-items: center;
+  pointer-events: none; /* decorative only — see .mi-root note */
   background: linear-gradient(180deg, #060a1c 0%, #050816 55%, #040614 100%);
   font-family: var(--font-display);
   text-align: center;
