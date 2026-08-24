@@ -35,8 +35,8 @@ model Meeting {
   date             DateTime
   duration         Int
   type             String
-  audioUrl         String?   @db.Text
-  transcriptRaw    String?   @db.LongText
+  audioUrl         String?
+  transcriptRaw    String?  @db.Text
   status           String  @default("processing")
   healthScore      Int?
   healthPercentile Float?
@@ -55,10 +55,10 @@ model Meeting {
   transcript      TranscriptSegment[]
   wasteSegments   WasteSegment[]
 
-  aiSummary   String?   @db.Text
-  aiNarrative String?   @db.Text
-  strengths   String?   @db.Text
-  weaknesses  String?   @db.Text
+  aiSummary   String?  @db.Text
+  aiNarrative String?  @db.Text
+  strengths   String?  @db.Text
+  weaknesses  String?  @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,7 +91,7 @@ model Topic {
 
 model Decision {
   id         String  @id @default(cuid())
-  text       String  @db.Text
+  text       String
   owner      String?
   timestamp  Int
   confidence Float
@@ -102,19 +102,19 @@ model Decision {
 
 model ActionItem {
   id        String    @id @default(cuid())
-  task      String    @db.Text
+  task      String
   owner     String?
   dueDate   DateTime?
   priority  String?
   status    String    @default("todo")
-  source    String?   @db.Text
+  source    String?    @db.Text
   meetingId String
   meeting   Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
 }
 
 model Problem {
   id             String  @id @default(cuid())
-  description    String  @db.Text
+  description    String
   severity       String
   timeImpact     Int?
   evidence       String?   @db.Text
@@ -125,7 +125,7 @@ model Problem {
 
 model Recommendation {
   id        String  @id @default(cuid())
-  text      String  @db.Text
+  text      String
   category  String?
   meetingId String
   meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
@@ -134,7 +134,7 @@ model Recommendation {
 model TranscriptSegment {
   id        String  @id @default(cuid())
   speaker   String
-  text      String  @db.Text
+  text      String    @db.Text
   startTime Int
   endTime   Int
   meetingId String
@@ -146,7 +146,7 @@ model WasteSegment {
   startTime   Int
   endTime     Int
   type        String
-  description String?   @db.Text
+  description String?  @db.Text
   valueLevel  Float
   meetingId   String
   meeting     Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
@@ -161,7 +161,7 @@ model Settings {
   scoringWeights      String?   @db.Text
   llmModel            String  @default("meta-llama/Llama-3.1-8B-Instruct")
   transcriptionLang   String  @default("en")
-  customPrompt        String?   @db.Text
+  customPrompt        String?
   theme               String  @default("dark")
   accentColor         String  @default("#4f7cff")
 }

@@ -3,10 +3,10 @@ import { Card, CardFooterLink, CardHeader } from "@/components/ui/card";
 import { formatDuration } from "@/lib/utils";
 
 const SEVERITY_DOT: Record<string, string> = {
-  critical: "#ef4444",
-  high: "#ef4444",
-  medium: "#fb923c",
-  low: "#fbbf24",
+  critical: "#f87171",
+  high: "#f87171",
+  medium: "#fbb064",
+  low: "#f5b94b",
 };
 
 export function TopProblemsCard({
@@ -26,7 +26,7 @@ export function TopProblemsCard({
               <span
                 aria-hidden
                 className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: SEVERITY_DOT[problem.severity] ?? "#fbbf24" }}
+                style={{ backgroundColor: SEVERITY_DOT[problem.severity] ?? "#f5b94b" }}
               />
               <span>
                 {problem.description}

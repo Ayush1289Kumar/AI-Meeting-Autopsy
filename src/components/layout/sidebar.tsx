@@ -2,91 +2,79 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import {
-  BarChart3,
-  CheckSquare,
-  Gauge,
-  ListChecks,
-  Settings,
-  Stethoscope,
-  Timer,
-  Users,
-  FileText,
-} from "lucide-react";
+import { Stethoscope, Gauge, FolderKanban, FileBarChart, ListChecks, Users, BarChart3, Plug, Settings } from "lucide-react";
+import { CopilotCard } from "@/components/dashboard/showcase/co-pilot-card";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: Gauge },
-  { href: "/meeting-autopsy", label: "Meeting Autopsy", icon: Stethoscope },
-  { href: "/transcript", label: "Transcript", icon: FileText },
-  { href: "/decisions", label: "Decisions", icon: CheckSquare, badge: "decisions" },
-  { href: "/action-items", label: "Action Items", icon: ListChecks, badge: "actionItems" },
-  { href: "/speakers", label: "Speakers", icon: Users },
-  { href: "/topics-timeline", label: "Topics Timeline", icon: Timer },
-  { href: "/reports", label: "Reports", icon: BarChart3 },
+  { href: "/meeting-autopsy", label: "Meetings", icon: FolderKanban },
+  { href: "/reports", label: "Autopsy Reports", icon: FileBarChart },
+  { href: "/action-items", label: "Action Items", icon: ListChecks },
+  { href: "/speakers", label: "Team Insights", icon: Users },
+  { href: "/topics-timeline", label: "Analytics", icon: BarChart3 },
+  { href: "/settings", label: "Integrations", icon: Plug },
   { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-export function Sidebar({ counts }: { counts: { decisions: number; actionItems: number } }) {
+export function Sidebar() {
   const pathname = usePathname();
   const meetingId = useSearchParams().get("meeting");
   const withMeeting = (href: string) => (meetingId ? `${href}?meeting=${meetingId}` : href);
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-[#12131c] px-3 py-5 md:flex">
-      <Link href={withMeeting("/dashboard")} className="mb-6 block px-2">
-        <p className="text-sm font-semibold leading-tight text-white">AI Meeting Autopsy</p>
-        <p className="text-[11px] text-muted">Analyze. Diagnose. Improve.</p>
+    <aside className="glass-panel z-20 flex w-56 shrink-0 flex-col overflow-y-auto border-r px-4 py-5 md:flex">
+      {/* Brand */}
+      <Link href={withMeeting("/dashboard")} className="mb-4 block rounded-lg px-2">
+        <div className="flex items-center gap-2.5">
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-brand shadow-[0_0_20px_-4px_rgba(139,92,246,0.95)]">
+            <Stethoscope size={18} className="text-white" />
+            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-accent animate-pulse-glow" />
+          </span>
+          <span className="leading-tight">
+            <p className="font-display text-sm font-bold leading-tight tracking-tight text-white">AI Meeting Autopsy</p>
+            <p className="text-[11px] text-muted">Analyze. Diagnose. Improve.</p>
+          </span>
+        </div>
       </Link>
 
-      <nav className="flex flex-1 flex-col gap-1">
+      {/* Main navigation */}
+      <nav aria-label="Main navigation" className="mb-4 flex flex-col gap-1">
         {NAV.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
-          const badge = "badge" in item ? counts[item.badge as keyof typeof counts] : undefined;
           return (
             <Link
-              key={item.href}
+              key={`${item.href}-${item.label}`}
               href={withMeeting(item.href)}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                active ? "bg-brand/15 text-white" : "text-muted hover:bg-white/5 hover:text-white"
+                "group relative flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200",
+                active
+                  ? "bg-brand/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]"
+                  : "text-muted hover:bg-white/5 hover:text-white"
               )}
             >
-              <Icon size={16} />
-              <span className="flex-1">{item.label}</span>
-              {badge ? (
-                <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-white">{badge}</span>
+              <Icon
+                size={17}
+                className={cn("shrink-0 transition-colors", active ? "text-brand" : "text-muted group-hover:text-white/80")}
+              />
+              <span className="truncate">{item.label}</span>
+              {active ? (
+                <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand shadow-[0_0_8px_rgba(139,92,246,0.95)]" />
               ) : null}
             </Link>
           );
         })}
       </nav>
+
+      {/* Co-Pilot */}
+      <div className="mt-auto flex flex-col items-center gap-2">
+        <CopilotCard />
+      </div>
     </aside>
   );
 }
 
 export function MobileNav() {
-  const pathname = usePathname();
-  const meetingId = useSearchParams().get("meeting");
-
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-border bg-[#12131c] py-2 md:hidden">
-      {NAV.slice(0, 5).map((item) => {
-        const Icon = item.icon;
-        const active = pathname === item.href;
-        return (
-          <Link
-            key={item.href}
-            href={meetingId ? `${item.href}?meeting=${meetingId}` : item.href}
-            aria-label={item.label}
-            className={cn("flex flex-col items-center gap-1 px-2 text-[10px]", active ? "text-brand" : "text-muted")}
-          >
-            <Icon size={18} />
-            {item.label.split(" ")[0]}
-          </Link>
-        );
-      })}
-    </nav>
-  );
+  return null;
 }

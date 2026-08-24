@@ -37,17 +37,17 @@ export const HEALTH_WEIGHTS = {
 } as const;
 
 export const SPEAKER_COLORS = [
-  "#4f7cff",
-  "#34d399",
-  "#fbbf24",
-  "#a78bfa",
-  "#fb923c",
-  "#f472b6",
+  "#8b5cf6",
+  "#10b981",
   "#22d3ee",
-  "#ef4444",
+  "#3d8bff",
+  "#f5b94b",
+  "#f472b6",
+  "#fbb064",
+  "#f87171",
 ];
 
-export const TOPIC_COLORS = ["#4f7cff", "#34d399", "#fbbf24", "#fb923c", "#ef4444", "#a78bfa"];
+export const TOPIC_COLORS = ["#8b5cf6", "#10b981", "#22d3ee", "#3d8bff", "#f87171", "#f5b94b"];
 
 export const PROCESSING_STAGES = [
   "Transcribing audio…",

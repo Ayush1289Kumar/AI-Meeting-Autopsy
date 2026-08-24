@@ -16,10 +16,10 @@ export function healthLabel(score: number): string {
 
 /** Hex colour matching a health score tier. */
 export function healthColor(score: number): string {
-  if (score >= 90) return "#34d399";
-  if (score >= 70) return "#4f7cff";
-  if (score >= 50) return "#fbbf24";
-  return "#ef4444";
+  if (score >= 90) return "#10b981";
+  if (score >= 70) return "#8b5cf6";
+  if (score >= 50) return "#f5b94b";
+  return "#f87171";
 }
 
 /**

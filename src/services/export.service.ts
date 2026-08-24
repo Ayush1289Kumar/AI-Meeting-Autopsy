@@ -77,7 +77,7 @@ export function meetingToHtml(meeting: FullMeeting): string {
   <style>
     body { font-family: system-ui, sans-serif; line-height: 1.6; color: #111; max-width: 800px; margin: 0 auto; padding: 40px 20px; }
     h1 { border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 30px; font-size: 2em; }
-    h2 { color: #4f7cff; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.3em; }
+    h2 { color: #8b5cf6; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.3em; }
     .meta { display: flex; gap: 20px; background: #f5f6fa; padding: 15px; border-radius: 8px; margin-bottom: 30px; }
     .meta div { flex: 1; }
     .meta strong { display: block; font-size: 0.8em; text-transform: uppercase; color: #666; margin-bottom: 4px; }

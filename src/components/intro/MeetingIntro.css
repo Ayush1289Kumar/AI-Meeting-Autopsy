@@ -1,0 +1,352 @@
+/* ============================================================
+   MeetingIntro.css
+   Cinematic "Meeting → AI Analysis → Insight" intro overlay.
+   Pure-CSS timeline (base duration 3.9s) + lightweight canvas
+   handled in MeetingIntro.jsx. Matches the Holo/Neon Glass
+   dark SaaS aesthetic. Percentages map: s/3.9s.
+   ============================================================ */
+
+/* -------------------- Root overlay -------------------- */
+.mi-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;               /* sits above dashboard + sidebar */
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  -webkit-user-select: none;
+  user-select: none;
+  color: #dbe2ff;
+}
+.mi-root.mi-exit {
+  animation: mi-exit 0.4s ease forwards;
+}
+@keyframes mi-exit {
+  to { opacity: 0; }
+}
+
+/* Opaque dark navy curtain that hides the dashboard, later
+   fades to reveal it (fade-in dash at the very end). */
+.mi-curtain {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 72% 66% at 50% 50%,
+      rgba(19, 25, 55, 0.92), transparent 72%),
+    linear-gradient(180deg, #060a1c 0%, #050816 55%, #040614 100%);
+  animation: mi-curtain 3.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes mi-curtain {
+  0%, 82%  { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* --- faint live-AI grid overlay, fades with intro --- */
+.mi-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 220, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 220, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 78% at 50% 50%, #000 30%, transparent 100%);
+          mask-image: radial-gradient(ellipse 80% 78% at 50% 50%, #000 30%, transparent 100%);
+  animation: mi-grid 3.9s ease forwards;
+}
+@keyframes mi-grid {
+  0%, 70%  { opacity: 0.55; }
+  100%     { opacity: 0; }
+}
+
+/* Particle canvas (animated in JS) */
+.mi-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* -------------------- Scene: core + rings -------------------- */
+.mi-scene {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+}
+@media (max-width: 480px) { .mi-scene { transform: scale(0.82); } }
+
+/* Central soft bloom that grows and surges near the end */
+.mi-glow {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(139, 92, 246, 0.16),
+    rgba(61, 139, 255, 0.055) 55%,
+    transparent 72%);
+  filter: blur(8px);
+  animation: mi-glow 3.9s ease forwards;
+}
+@keyframes mi-glow {
+  0%   { opacity: 0.5; transform: scale(0.5); }
+  20%  { opacity: 0.8; transform: scale(0.7); }
+  46%  { opacity: 1;   transform: scale(1); }
+  69%  { opacity: 1;   transform: scale(1.12); }
+  82%  { opacity: 1.15; transform: scale(1.4); }
+  100% { opacity: 0;    transform: scale(1.9); }
+}
+
+/* The tiny point -> AI core */
+.mi-core {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    #ffffff 0%, #c9d0ff 22%, #8b5cf6 58%, #3d8bff 100%);
+  box-shadow:
+    0 0 16px 4px rgba(139, 92, 246, 0.7),
+    0 0 46px 14px rgba(61, 139, 255, 0.42);
+  animation: mi-core 3.9s ease forwards;
+}
+@keyframes mi-core {
+  0%   { opacity: 0.95; transform: scale(0.4); }
+  20%  { opacity: 1;    transform: scale(0.75); }
+  46%  { opacity: 1;    transform: scale(1.7); }
+  60%  { opacity: 1;    transform: scale(1.4); }
+  69%  { opacity: 1;    transform: scale(1.65); }
+  82%  { opacity: 1;    transform: scale(2.1); box-shadow: 0 0 34px 10px rgba(139,92,246,0.95), 0 0 70px 22px rgba(61,139,255,0.6); }
+  100% { opacity: 0;    transform: scale(1); }
+}
+
+/* Thin circular rings around the core */
+.mi-ring {
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 50%;
+  box-shadow: inset 0 0 18px rgba(139, 92, 246, 0.12);
+  animation: mi-ring 3.9s ease forwards;
+}
+.mi-ring-b {
+  border-color: rgba(34, 211, 238, 0.32);
+  animation-delay: 0.09s;
+  transform: rotate(45deg) scale(1.18);
+}
+@keyframes mi-ring {
+  0%, 25%  { opacity: 0; transform: rotate(0deg) scale(0.72); }
+  36%      { opacity: 0.55; }
+  46%      { opacity: 0.65; transform: rotate(0deg) scale(1.04); }
+  69%      { opacity: 0.4;  transform: rotate(0deg) scale(1.16); }
+  82%      { opacity: 0.15; transform: rotate(0deg) scale(1.3); }
+  100%     { opacity: 0; transform: rotate(0deg) scale(1.7); }
+}
+/* The elegant scanning ring (built as an arc via conic gradient) */
+.mi-scan {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 60%, transparent 60% 61%, rgba(165, 180, 252, 0.9) 61%, rgba(165, 180, 252, 0.9) 63%, transparent 63%),
+    conic-gradient(from 0deg, transparent 0deg 300deg, rgba(139, 92, 246, 0.85) 355deg, transparent 360deg);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 61%, #000 63%);
+          mask: radial-gradient(circle at 50% 50%, transparent 61%, #000 63%);
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.7));
+  animation: mi-scan 3.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes mi-scan {
+  0%, 45% { opacity: 0; transform: translateZ(0) rotate(0deg) scale(0.9); }
+  50%     { opacity: 0.9; }
+  55%     { opacity: 0.55; }
+  69%     { opacity: 0.3; transform: translateZ(0) rotate(360deg) scale(1.18); }
+  75%, 100% { opacity: 0; transform: translateZ(0) rotate(360deg) scale(1.25); }
+}
+
+/* Expanding diagnostic ring that "becomes" the dashboard glow */
+.mi-expand {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 40px 6px rgba(139, 92, 246, 0.35);
+  opacity: 0;
+  animation: mi-expand 3.9s ease forwards;
+}
+@keyframes mi-expand {
+  0%, 69% { opacity: 0; transform: translateZ(0) scale(0.5); box-shadow: 0 0 30px 4px rgba(139,92,246,0.3); }
+  72%     { opacity: 0.75; transform: translateZ(0) scale(1); }
+  82%     { opacity: 0.5;  transform: translateZ(0) scale(2.7); box-shadow: 0 0 70px 16px rgba(139,92,246,0.5); }
+  100%    { opacity: 0; transform: translateZ(0) scale(6.2); }
+}
+
+/* -------------------- Subtle labels -------------------- */
+.mi-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: rgba(203, 213, 255, 0.7);
+  opacity: 0;
+  white-space: nowrap;
+  animation: mi-label 3.9s ease forwards;
+}
+.mi-lbl-speech       { transform: translate(-50%, -50%) translateY(-64px); }
+.mi-lbl-participation{ transform: translate(-50%, -50%) translate(64px, 10px); }
+.mi-lbl-decisions    { transform: translate(-50%, -50%) translateY(64px); }
+.mi-lbl-flow         { transform: translate(-50%, -50%) translate(-64px, 8px); }
+@keyframes mi-label {
+  0%, 29%  { opacity: 0; }
+  38%      { opacity: 0.7; }
+  46%      { opacity: 0.85; }
+  55%      { opacity: 0.3; }
+  68%, 100% { opacity: 0; }
+}
+.mi-lbl-participation { animation-delay: 0.05s; }
+.mi-lbl-decisions     { animation-delay: 0.11s; }
+.mi-lbl-flow          { animation-delay: 0.16s; }
+
+/* -------------------- Sequence text -------------------- */
+.mi-text {
+  position: absolute;
+  bottom: 22vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.mi-text > span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+}
+.mi-t1 { font-size: 13px; letter-spacing: 0.42em; color: rgba(197, 208, 255, 0.85); animation: mi-t1 3.9s ease forwards; }
+.mi-t2 { font-size: 13px; letter-spacing: 0.42em; color: rgba(165, 180, 252, 0.9);  animation: mi-t2 3.9s ease forwards; }
+.mi-t3 { font-size: 14px; letter-spacing: 0.4em; color: #dbe2ff; animation: mi-t3 3.9s ease forwards; }
+.mi-t3 b { font-weight: 600; }
+@keyframes mi-t1 {
+  0%, 10% { opacity: 0; }
+  20%     { opacity: 0.9; }
+  40%     { opacity: 0.9; }
+  46%, 100% { opacity: 0; }
+}
+@keyframes mi-t2 {
+  0%, 47% { opacity: 0; }
+  52%     { opacity: 0.9; }
+  66%     { opacity: 0.9; }
+  73%, 100% { opacity: 0; }
+}
+@keyframes mi-t3 {
+  0%, 70% { opacity: 0; }
+  76%     { opacity: 0; }
+  78%     { opacity: 0.95; }
+  88%     { opacity: 0.95; }
+  95%, 100% { opacity: 0; }
+}
+
+/* -------------------- Skip button -------------------- */
+.mi-skip {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 15;
+  padding: 7px 14px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(203, 213, 255, 0.75);
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  opacity: 0;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.3s ease;
+  animation: mi-skip-in 0.6s 0.9s ease forwards;
+}
+.mi-skip:hover {
+  color: #fff;
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.6);
+}
+@keyframes mi-skip-in { to { opacity: 1; } }
+
+/* -------------------- Reduced motion variant -------------------- */
+.mi-reduced-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #060a1c 0%, #050816 55%, #040614 100%);
+  font-family: var(--font-display);
+  text-align: center;
+  animation: mi-reduced 1.15s ease forwards;
+}
+.mi-reduced-mark {
+  font-size: 20px;
+  letter-spacing: 0.16em;
+  color: rgba(219, 226, 255, 0.92);
+}
+.mi-reduced-mark span {
+  color: transparent;
+  background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.mi-reduced-pulse {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #8b5cf6 60%, #3d8bff 100%);
+  box-shadow: 0 0 24px 6px rgba(139, 92, 246, 0.6);
+  animation: mi-pulse 1s ease-in-out infinite;
+}
+@keyframes mi-pulse {
+  0%, 100% { opacity: 0.72; }
+  50%      { opacity: 1; }
+}
+@keyframes mi-reduced {
+  0%, 74% { opacity: 1; }
+  100%    { opacity: 0; }
+}
+.mi-reduced-skip {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 15;
+  padding: 7px 14px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(203, 213, 255, 0.75);
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.mi-reduced-skip:hover {
+  color: #fff;
+  background: rgba(139, 92, 246, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mi-root, .mi-curtain, .mi-grid, .mi-glow, .mi-core,
+  .mi-ring, .mi-scan, .mi-expand, .mi-label, .mi-text > span,
+  .mi-skip { animation: none !important; }
+}
