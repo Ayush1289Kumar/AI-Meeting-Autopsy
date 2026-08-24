@@ -38,7 +38,7 @@ export function ActionItemsTable({
           </thead>
           <tbody>
             {actionItems.slice(0, limit).map((item, index) => (
-              <tr key={item.id}>
+              <tr key={item.id} className="transition-colors hover:bg-white/[0.03]">
                 <Td className="text-muted">{index + 1}</Td>
                 <Td className="text-white">{item.task}</Td>
                 <Td>

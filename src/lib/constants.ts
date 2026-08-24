@@ -37,7 +37,7 @@ export const HEALTH_WEIGHTS = {
 } as const;
 
 export const SPEAKER_COLORS = [
-  "#4f7cff",
+  "#3B82F6",
   "#34d399",
   "#fbbf24",
   "#a78bfa",
@@ -47,7 +47,7 @@ export const SPEAKER_COLORS = [
   "#ef4444",
 ];
 
-export const TOPIC_COLORS = ["#4f7cff", "#34d399", "#fbbf24", "#fb923c", "#ef4444", "#a78bfa"];
+export const TOPIC_COLORS = ["#3B82F6", "#34d399", "#fbbf24", "#fb923c", "#ef4444", "#a78bfa"];
 
 export const PROCESSING_STAGES = [
   "Transcribing audio…",

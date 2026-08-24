@@ -7,7 +7,7 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, { src: string; onTime: (
     const [rate, setRate] = useState(1);
 
     return (
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-[#15161f] p-3">
+      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-white/[0.03] p-3">
         <audio
           ref={ref}
           src={src}

@@ -2,12 +2,12 @@ import { cn } from "@/lib/utils";
 
 const TONES = {
   neutral: "bg-white/5 text-muted border-white/10",
-  blue: "bg-brand/15 text-brand border-brand/30",
-  green: "bg-success/15 text-success border-success/30",
+  blue: "bg-brand/15 text-brand border-brand/30 shadow-[0_0_12px_rgba(124,140,255,0.15)]",
+  green: "bg-success/15 text-success border-success/30 shadow-[0_0_12px_rgba(52,211,153,0.15)]",
   yellow: "bg-warning/15 text-warning border-warning/30",
   orange: "bg-orange/15 text-orange border-orange/30",
   red: "bg-danger/15 text-danger border-danger/30",
-  purple: "bg-ai/15 text-ai border-ai/30",
+  purple: "bg-ai/15 text-ai border-ai/30 shadow-[0_0_12px_rgba(196,181,253,0.15)]",
 } as const;
 
 export type BadgeTone = keyof typeof TONES;

@@ -22,7 +22,7 @@ export function MeetingSelector({
   return (
     <Select
       aria-label="Select meeting"
-      className="h-9 w-52 py-0"
+      className="h-9 w-40 py-0 sm:w-52"
       value={activeMeetingId ?? ""}
       onChange={(event) => router.push(`${pathname}?meeting=${event.target.value}`)}
     >

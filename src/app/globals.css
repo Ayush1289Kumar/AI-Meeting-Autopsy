@@ -8,7 +8,7 @@
 
 html,
 body {
-  background-color: #0f1117;
+  background-color: #070B10;
   color: #ffffff;
 }
 
@@ -20,6 +20,10 @@ html.light body {
 
 body {
   font-size: 14px;
+  background-image:
+    radial-gradient(ellipse 1000px 650px at 10% -10%, rgba(59, 130, 246, 0.10), transparent 60%),
+    radial-gradient(ellipse 800px 550px at 100% 0%, rgba(139, 92, 246, 0.07), transparent 60%);
+  background-attachment: fixed;
 }
 
 ::-webkit-scrollbar {
@@ -27,17 +31,61 @@ body {
   height: 10px;
 }
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: #2a2b3d;
+  background: rgba(148, 163, 184, 0.14);
   border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.35);
+  background-clip: padding-box;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: #fff;
 }
 
 @layer components {
   .card-surface {
-    @apply rounded-card border border-border bg-card p-5 transition-colors hover:bg-card-hover;
+    @apply relative rounded-card border border-border bg-card p-5 shadow-glass backdrop-blur-xl transition-all duration-300;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.005) 100%);
+  }
+
+  .card-surface:hover {
+    @apply border-border-strong bg-card-hover;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.06);
+    transform: translateY(-2px);
   }
 
   .section-title {
-    @apply flex items-center gap-2 text-sm font-semibold text-white;
+    @apply flex items-center gap-2 text-sm font-semibold tracking-tight text-white;
+  }
+
+  .text-gradient-brand {
+    @apply bg-brand-gradient bg-clip-text text-transparent;
+  }
+
+  .glass-panel {
+    @apply border border-border bg-white/[0.03] shadow-glass backdrop-blur-xl;
+  }
+
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }

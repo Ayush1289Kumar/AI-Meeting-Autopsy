@@ -24,13 +24,22 @@ export function DonutChart({
     <div className="relative" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Pie data={data} dataKey="value" innerRadius="62%" outerRadius="90%" paddingAngle={2} stroke="none">
+          <Pie
+            data={data}
+            dataKey="value"
+            innerRadius="62%"
+            outerRadius="90%"
+            paddingAngle={2}
+            stroke="none"
+            animationDuration={1000}
+            animationEasing="ease-out"
+          >
             {data.map((entry) => (
               <Cell key={entry.name} fill={entry.color} />
             ))}
           </Pie>
           <Tooltip
-            contentStyle={{ background: "#12131c", border: "1px solid #2a2b3d", borderRadius: 8, fontSize: 12 }}
+            contentStyle={{ background: "#0E151D", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }}
             formatter={(value, name) => {
               const datum = data.find((item) => item.name === name);
               return [datum?.label ?? String(value), String(name)];

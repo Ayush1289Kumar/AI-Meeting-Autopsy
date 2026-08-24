@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { PageHero } from "@/components/common/page-hero";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge, severityTone } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -30,6 +31,13 @@ export default async function MeetingAutopsyPage({ searchParams }: { searchParam
 
   return (
     <div className="space-y-4">
+      <PageHero
+        icon="stethoscope"
+        eyebrow="Deep diagnostic"
+        title="Meeting Autopsy"
+        subtitle="AI narrative, strengths, weaknesses, and problem breakdown for this meeting."
+      />
+
       <Card>
         <CardHeader title="Full AI Narrative Summary" />
         <div className="space-y-3 text-sm leading-relaxed text-muted">
@@ -45,7 +53,7 @@ export default async function MeetingAutopsyPage({ searchParams }: { searchParam
           <ul className="space-y-2 text-sm">
             {strengths.length ? (
               strengths.map((item) => (
-                <li key={item} className="rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-success">
+                <li key={item} className="rounded-lg border border-success/25 bg-success/[0.08] px-3 py-2 text-success backdrop-blur-sm">
                   {item}
                 </li>
               ))
@@ -60,7 +68,7 @@ export default async function MeetingAutopsyPage({ searchParams }: { searchParam
           <ul className="space-y-2 text-sm">
             {weaknesses.length ? (
               weaknesses.map((item) => (
-                <li key={item} className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-danger">
+                <li key={item} className="rounded-lg border border-danger/25 bg-danger/[0.08] px-3 py-2 text-danger backdrop-blur-sm">
                   {item}
                 </li>
               ))
@@ -76,7 +84,7 @@ export default async function MeetingAutopsyPage({ searchParams }: { searchParam
         <div className="space-y-3">
           {meeting.problems.length ? (
             meeting.problems.map((problem) => (
-              <article key={problem.id} className="rounded-lg border border-border bg-[#15161f] p-4">
+              <article key={problem.id} className="rounded-lg border border-border bg-white/[0.03] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="text-sm font-medium text-white">{problem.description}</h3>
                   <div className="flex items-center gap-2">

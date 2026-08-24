@@ -26,14 +26,22 @@ export function ValueAreaChart({ data, height = 180 }: { data: AreaPoint[]; heig
               <stop offset="100%" stopColor="#ef4444" stopOpacity={0.25} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="#2a2b3d" strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="label" tick={{ fill: "#8b8d9e", fontSize: 11 }} tickLine={false} axisLine={false} />
           <YAxis domain={[0, 100]} tick={{ fill: "#8b8d9e", fontSize: 11 }} tickLine={false} axisLine={false} />
           <Tooltip
-            contentStyle={{ background: "#12131c", border: "1px solid #2a2b3d", borderRadius: 8, fontSize: 12 }}
+            contentStyle={{ background: "#0E151D", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }}
             formatter={(value) => [`${value}% value`, "Value level"]}
           />
-          <Area type="monotone" dataKey="value" stroke="#34d399" fill="url(#valueGradient)" strokeWidth={2} />
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke="#34d399"
+            fill="url(#valueGradient)"
+            strokeWidth={2.5}
+            animationDuration={1200}
+            animationEasing="ease-out"
+          />
         </RechartsAreaChart>
       </ResponsiveContainer>
     </div>

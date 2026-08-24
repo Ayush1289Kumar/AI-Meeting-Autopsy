@@ -23,7 +23,7 @@ export function InfoTooltip({ text }: { text: string }) {
       {open ? (
         <span
           role="tooltip"
-          className="absolute left-1/2 top-6 z-30 w-64 -translate-x-1/2 rounded-lg border border-border bg-[#12131c] p-3 text-xs font-normal leading-relaxed text-muted shadow-xl"
+          className="absolute left-1/2 top-6 z-30 w-64 -translate-x-1/2 rounded-lg border border-border bg-canvas-elevated/95 backdrop-blur-xl p-3 text-xs font-normal leading-relaxed text-muted shadow-xl"
         >
           {text}
         </span>

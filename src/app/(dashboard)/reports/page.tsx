@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { PageHero } from "@/components/common/page-hero";
 import { Card, CardHeader } from "@/components/ui/card";
 import { GroupedBarChart } from "@/components/charts/bar-chart";
 import { TrendLineChart } from "@/components/charts/line-chart";
@@ -42,6 +43,12 @@ export default async function ReportsPage({
   if (!meetings.length) {
     return (
       <div className="space-y-4">
+        <PageHero
+          icon="line-chart"
+          eyebrow="Across all meetings"
+          title="Reports"
+          subtitle="Trends, patterns, and recurring problems across your meeting history."
+        />
         <ReportFilters types={types} />
         <EmptyState title="No meetings in range" message="Adjust the filters or analyze a meeting first." />
       </div>
@@ -99,6 +106,13 @@ export default async function ReportsPage({
 
   return (
     <div className="space-y-4">
+      <PageHero
+        icon="line-chart"
+        eyebrow="Across all meetings"
+        title="Reports"
+        subtitle="Trends, patterns, and recurring problems across your meeting history."
+      />
+
       <ReportFilters types={types} />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -110,10 +124,10 @@ export default async function ReportsPage({
             value: allActionItems.length ? `${Math.round((done / allActionItems.length) * 100)}%` : "—",
           },
           { label: "Overdue action items", value: String(overdue) },
-        ].map((stat) => (
-          <div key={stat.label} className="card-surface">
+        ].map((stat, i) => (
+          <div key={stat.label} className="card-surface animate-fade-up" style={{ animationDelay: `${i * 0.06}s` }}>
             <p className="text-xs text-muted">{stat.label}</p>
-            <p className="mt-1 text-xl font-semibold text-white">{stat.value}</p>
+            <p className="mt-1 font-display text-2xl font-semibold text-white">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -139,7 +153,7 @@ export default async function ReportsPage({
           <CardHeader title="Meeting Frequency" />
           <GroupedBarChart
             data={[...frequency.entries()].map(([label, count]) => ({ label, meetings: count }))}
-            bars={[{ key: "meetings", color: "#4f7cff", name: "Meetings" }]}
+            bars={[{ key: "meetings", color: "#3B82F6", name: "Meetings" }]}
           />
         </Card>
         <Card>
@@ -147,7 +161,7 @@ export default async function ReportsPage({
           <GroupedBarChart
             data={decisionTrend}
             bars={[
-              { key: "decisions", color: "#4f7cff", name: "Decisions" },
+              { key: "decisions", color: "#3B82F6", name: "Decisions" },
               { key: "actionItems", color: "#34d399", name: "Action items" },
             ]}
           />
