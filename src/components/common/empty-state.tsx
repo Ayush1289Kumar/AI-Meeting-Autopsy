@@ -9,11 +9,16 @@ export function EmptyState({
   message?: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border bg-card/50 p-12 text-center">
-      <FileQuestion className="mb-3 text-muted" size={32} />
-      <h2 className="text-base font-semibold text-white">{title}</h2>
+    <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-strong bg-white/[0.02] p-12 text-center backdrop-blur-xl">
+      <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-gradient-soft">
+        <FileQuestion className="text-brand-2" size={26} />
+      </span>
+      <h2 className="font-display text-lg font-semibold text-white">{title}</h2>
       <p className="mt-1 max-w-md text-sm text-muted">{message}</p>
-      <Link href="/dashboard" className="mt-4 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white">
+      <Link
+        href="/dashboard"
+        className="mt-5 rounded-lg bg-brand-gradient px-4 py-2 text-sm font-medium text-white shadow-glow-soft transition-shadow hover:shadow-glow-brand"
+      >
         Go to dashboard
       </Link>
     </div>

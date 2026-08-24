@@ -40,7 +40,7 @@ export function DecisionsTable({
           </thead>
           <tbody>
             {decisions.slice(0, limit).map((decision, index) => (
-              <tr key={decision.id}>
+              <tr key={decision.id} className="transition-colors hover:bg-white/[0.03]">
                 <Td className="text-muted">{index + 1}</Td>
                 <Td className="text-white">{decision.text}</Td>
                 <Td className="text-muted">{decision.owner ?? "—"}</Td>

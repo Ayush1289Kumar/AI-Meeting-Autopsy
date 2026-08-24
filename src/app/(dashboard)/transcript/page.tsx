@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { PageHero } from "@/components/common/page-hero";
 import { TranscriptViewer, type Highlight } from "@/components/transcript/transcript-viewer";
 import { resolvePageMeeting } from "@/lib/page-data";
 
@@ -24,11 +25,19 @@ export default async function TranscriptPage({ searchParams }: { searchParams?: 
   ];
 
   return (
-    <TranscriptViewer
+    <div className="space-y-4">
+      <PageHero
+        icon="transcript"
+        eyebrow="Word for word"
+        title="Full Transcript"
+        subtitle="Every segment, speaker-tagged, with decisions and wasted time highlighted inline."
+      />
+      <TranscriptViewer
       segments={meeting.transcript}
       speakers={meeting.participants.map((participant) => ({ name: participant.name, color: participant.color }))}
       highlights={highlights}
       audioUrl={meeting.audioUrl}
     />
+    </div>
   );
 }

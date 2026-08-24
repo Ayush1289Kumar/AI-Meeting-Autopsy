@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { PageHero } from "@/components/common/page-hero";
 import { SettingsForm } from "@/components/settings/settings-form";
 import { getActiveUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -21,7 +22,14 @@ export default async function SettingsPage() {
   });
 
   return (
-    <SettingsForm
+    <div className="space-y-4">
+      <PageHero
+        icon="settings"
+        eyebrow="Your workspace"
+        title="Settings"
+        subtitle="Preferences, AI behavior, and account details for your organization."
+      />
+      <SettingsForm
       user={{ name: user.name, email: user.email }}
       org={org ? { name: org.name, members: org.members.map((member) => member.name) } : null}
       settings={{
@@ -35,5 +43,6 @@ export default async function SettingsPage() {
       }}
       usage={{ meetings: stats._count, minutes: Math.round((stats._sum.duration ?? 0) / 60) }}
     />
+    </div>
   );
 }

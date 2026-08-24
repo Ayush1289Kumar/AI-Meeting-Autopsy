@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 const base =
-  "w-full rounded-lg border border-border bg-[#15161f] px-3 py-2 text-sm text-white placeholder:text-muted focus:border-brand focus:outline-none";
+  "w-full rounded-lg border border-border bg-white/[0.03] px-3 py-2 text-sm text-white placeholder:text-muted focus:border-brand focus:outline-none";
 
 export function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(base, className)} {...props} />;

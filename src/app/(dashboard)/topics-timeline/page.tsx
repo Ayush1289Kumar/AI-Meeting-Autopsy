@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { PageHero } from "@/components/common/page-hero";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ValueAreaChart } from "@/components/charts/area-chart";
@@ -35,6 +36,13 @@ export default async function TopicsTimelinePage({ searchParams }: { searchParam
 
   return (
     <div className="space-y-4">
+      <PageHero
+        icon="waves"
+        eyebrow="Where the time went"
+        title="Topics Timeline"
+        subtitle="Topic flow, duration, and drift across the full length of the meeting."
+      />
+
       <Card>
         <CardHeader title="Full Timeline" info="Each topic as a proportional band; drift segments are striped red." />
         <div className="flex h-10 w-full overflow-hidden rounded-lg">

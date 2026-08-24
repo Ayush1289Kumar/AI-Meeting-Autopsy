@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Sidebar, MobileNav } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { AmbientBackground } from "@/components/common/ambient-background";
+import { PageTransition } from "@/components/common/page-transition";
 
 export interface ShellMeeting {
   id: string;
@@ -40,9 +42,10 @@ function ShellInner({
   const meta = PAGE_META[pathname] ?? { title: "AI Meeting Autopsy", subtitle: "Analyze. Diagnose. Improve." };
 
   return (
-    <div className="flex min-h-screen bg-canvas">
+    <div className="relative flex min-h-screen bg-canvas">
+      <AmbientBackground />
       <Sidebar counts={{ decisions: active?.decisions ?? 0, actionItems: active?.actionItems ?? 0 }} />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
         <Header
           title={meta.title}
           subtitle={`${meta.subtitle}${active ? ` — ${active.title}` : ""}`}
@@ -50,7 +53,9 @@ function ShellInner({
           activeMeetingId={active?.id}
           userName={userName}
         />
-        <main className="flex-1 px-4 pb-24 pt-5 md:px-6 md:pb-8">{children}</main>
+        <main className="flex-1 px-4 pb-24 pt-5 md:px-6 md:pb-8">
+          <PageTransition>{children}</PageTransition>
+        </main>
         <MobileNav />
       </div>
     </div>

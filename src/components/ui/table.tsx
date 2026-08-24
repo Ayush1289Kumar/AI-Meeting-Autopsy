@@ -17,5 +17,9 @@ export function Th({ children, className }: { children?: React.ReactNode; classN
 }
 
 export function Td({ children, className }: { children?: React.ReactNode; className?: string }) {
-  return <td className={cn("border-b border-border/60 py-3 pr-4 align-top text-sm", className)}>{children}</td>;
+  return (
+    <td className={cn("border-b border-border/50 py-3 pr-4 align-top text-sm transition-colors", className)}>
+      {children}
+    </td>
+  );
 }

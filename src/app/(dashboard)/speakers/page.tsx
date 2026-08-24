@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { PageHero } from "@/components/common/page-hero";
 import { Card, CardHeader } from "@/components/ui/card";
 import { GroupedBarChart } from "@/components/charts/bar-chart";
 import { SpeakerDrilldown } from "@/components/speakers/speaker-drilldown";
@@ -23,6 +24,13 @@ export default async function SpeakersPage({ searchParams }: { searchParams?: { 
 
   return (
     <div className="space-y-4">
+      <PageHero
+        icon="users"
+        eyebrow="Who said what"
+        title="Speakers"
+        subtitle="Participation, speaking balance, and per-person insights for this meeting."
+      />
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {meeting.participants.map((participant) => {
           const decisions = meeting.decisions.filter((decision) => decision.owner === participant.name).length;
@@ -32,7 +40,7 @@ export default async function SpeakersPage({ searchParams }: { searchParams?: { 
               <div className="flex items-center gap-3">
                 <span
                   className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold text-white"
-                  style={{ backgroundColor: participant.color ?? "#4f7cff" }}
+                  style={{ backgroundColor: participant.color ?? "#3B82F6" }}
                 >
                   {initials(participant.name)}
                 </span>
@@ -70,8 +78,8 @@ export default async function SpeakersPage({ searchParams }: { searchParams?: { 
         <GroupedBarChart
           data={chartData}
           bars={[
-            { key: "actual", color: "#4f7cff", name: "Actual %" },
-            { key: "ideal", color: "#2a2b3d", name: "Ideal %" },
+            { key: "actual", color: "#3B82F6", name: "Actual %" },
+            { key: "ideal", color: "#2a2c3f", name: "Ideal %" },
           ]}
         />
       </Card>
@@ -93,7 +101,7 @@ export default async function SpeakersPage({ searchParams }: { searchParams?: { 
                       style={{
                         left: `${(segment.startTime / Math.max(meeting.duration, 1)) * 100}%`,
                         width: `${Math.max(0.4, ((segment.endTime - segment.startTime) / Math.max(meeting.duration, 1)) * 100)}%`,
-                        backgroundColor: participant.color ?? "#4f7cff",
+                        backgroundColor: participant.color ?? "#3B82F6",
                       }}
                     />
                   ))}
