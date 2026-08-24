@@ -10,10 +10,10 @@ The application uses a **dark-mode first** aesthetic that feels modern, premium,
 
 The current look is defined by five recurring ideas:
 
-1. **Layered glass** — every panel is translucent and blurred (`backdrop-filter`), sitting over the ambient canvas.
+1. **Layered glass** — panels sit translucent over the ambient canvas; persistent chrome (sidebar, header, mobile nav) uses `backdrop-filter` blur, while cards use a slightly more opaque tinted surface instead of a blur layer (see §5).
 2. **Neon glow accents** — purple (brand) and cyan (accent) glows on status dots, active nav, buttons, and the AI orb.
 3. **Gradient moments** — used sparingly but deliberately: the `.text-gradient` headline, promo/shimmer surfaces, avatar chips, and the AI orb core.
-4. **Living ambient background** — a fixed neural-network canvas plus drifting aurora blobs and a faint grid sit behind all content.
+4. **Living ambient background** — a fixed neural-network canvas plus soft glow blobs (static in the shell, drifting in the hero) and a faint grid sit behind all content.
 5. **Micro-motion** — hover lifts (`-translate-y-0.5`), pulsing status dots, floating particles, and an animated shimmer border create a "diagnostic AI" feel.
 
 ## 2. Color Palette
@@ -80,16 +80,16 @@ Two fonts are loaded via `next/font/google` in `src/app/layout.tsx`:
 Defined in `globals.css` under `@layer components`.
 
 ### `.card-surface` — the fundamental glass card
-- Rounded (`12px`), bordered, `p-5`, with `transition-all duration-300`.
-- **Background**: a vertical tint `rgba(139,92,246,0.045) → rgba(34,211,238,0.015)` layered over `rgba(8,11,28,0.66)`.
-- **Blur**: `backdrop-filter: blur(14px) saturate(140%)`.
-- **Border**: `rgba(134,158,224,0.14)` plus a **gradient rim** drawn by a `::before` pseudo-element (`1px` gradient border: violet → faint cyan → transparent) using mask-composite.
+- Rounded (`12px`), bordered, `p-5`; transitions only cheap properties (`border-color` / `box-shadow`, `0.3s ease`) to avoid layout/paint-heavy transitions.
+- **Background**: a vertical tint `rgba(139,92,246,0.045) → rgba(34,211,238,0.015) 55%` layered over an opaque `rgba(8,11,28,0.86)`.
+- **No backdrop-filter** (deliberate perf choice): with the ambient canvas animating behind the cards, every backdrop layer would re-sample the backdrop at 60fps — the most expensive thing on the page. The more opaque background keeps the same look with zero compositing cost.
+- **Border**: `rgba(134,158,224,0.14)` plus a **gradient rim** drawn by a `::before` pseudo-element (violet → faint cyan → transparent gradient ring via mask-composite, at opacity `0.45`).
 - **Shadow**: inset top highlight (`rgba(255,255,255,0.04)`), deep drop shadow, and a soft violet outer glow (`0 0 42px -30px rgba(139,92,246,0.35)`).
-- **Hover**: border shifts toward brand violet and the glow intensifies (`0 0 64px -32px rgba(139,92,246,0.75)`).
+- **Hover**: border shifts toward brand violet (`rgba(139,92,246,0.4)`) and the glow intensifies (`0 0 64px -32px rgba(139,92,246,0.75)`).
 
 ### `.glass-panel` — frosted chrome for chrome UI
-Used by the **sidebar**, **header**, and **mobile bottom nav**.
-- `background: rgba(6,8,21,0.66)`, `backdrop-filter: blur(18px) saturate(150%)`, border `rgba(134,158,224,0.12)`.
+Used by the **sidebar**, **header**, and **mobile bottom nav**. Kept for these 2–3 persistent elements only, with a reduced blur radius (large blurs on composited layers are expensive to rasterize).
+- `background: rgba(6,8,21,0.72)`, `backdrop-filter: blur(10px) saturate(120%)`, border `rgba(134,158,224,0.12)`.
 
 ### `.text-gradient` — neon gradient text
 - `linear-gradient(90deg, #8b5cf6, #22d3ee 60%, #10b981)` clipped to text. Used for hero headlines ("insight", "smarter", "We understand.") and promo copy.
@@ -145,7 +145,7 @@ Keyframes are registered in `tailwind.config.ts` (`theme.extend.keyframes` / `an
 
 | Animation            | Timing                  | Use                                                          |
 | -------------------- | ----------------------- | ------------------------------------------------------------ |
-| `animate-aurora`     | `14s ease-in-out`       | Drifting blurred glow blobs behind content & hero            |
+| `animate-aurora`     | `14s ease-in-out`       | Hero glow blob drift (shell ambient blobs are static)        |
 | `animate-float`      | `6s ease-in-out`        | Floating signal dots, timeline markers, promo orbs           |
 | `animate-pulse-glow` | `4s ease-in-out`        | Status dots: online, copilot active, notifications, core     |
 | `animate-shimmer`    | `3.2s linear`           | Promo/brand surfaces (`shimmer-border` uses a 4.5s variant)  |
@@ -157,6 +157,7 @@ Keyframes are registered in `tailwind.config.ts` (`theme.extend.keyframes` / `an
 - **AI orb choreography** (custom keyframes in `globals.css`, always emitted): `da-orbit` (16s / 11s reverse ring rotation), `da-orb-activate` (1.4s settle-in: fade + scale + blur-out), `da-core-pulse` (3.4s calm breathing).
 - **Loading states**: pulsing/spinning border circle (`animate-spin`) plus the multi-stage processing stepper ("Transcribing audio…", "Identifying speakers…", …).
 - **Reduced motion**: `NeuralBackground` and `MeetingIntro` respect `prefers-reduced-motion: reduce` (static draw / short minimal intro, CSS animations disabled).
+- **Perf note**: after the dashboard-lag reduction pass, the app shell's ambient glow blobs are intentionally **static**; `animate-aurora` now runs only on the hero glow blob, and `animate-shimmer` / `animate-spin-slow` remain registered in Tailwind but are currently unused.
 ## 8. Data Visualization
 
 Recharts powers the analytic charts, customized to match the dark theme. The marketing showcase adds bespoke visuals.
