@@ -182,17 +182,57 @@ body {
   }
 }
 /* ==========================================================================
-   Explicit keyframes for the AI orb / brand signature visual.
-   Kept outside Tailwind layers so they are ALWAYS emitted (Tailwind only
-   emits config keyframes when the matching `animate-*` utility is used,
-   so arbitrary [animation:...] properties silently fail to run).
+   Motion language (huashu-style): animate ONLY transform/opacity, staged
+   timelines, explicit easing curves. Tokens live on :root so components and
+   utilities share the same feel.
    ========================================================================== */
-@keyframes da-orbit {
-  to {
-    transform: rotate(360deg);
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Lenis smooth scroll (minimal required rules) ----------------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* --- Scroll-reveal system ------------------------------------------------ */
+/* Base styles only apply when motion is allowed; reduced-motion users simply
+   see content fully visible with no transition at all. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s var(--ease-out-expo),
+      transform 0.7s var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  [data-reveal="scale"] {
+    transform: scale(0.96);
+  }
+  [data-reveal="fade"] {
+    transform: none;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
   }
 }
 
+/* ==========================================================================
+   AI orb — calm brand signature. One GPU-composited scan ring + breathing
+   halo + core pulse. No long linear ring rotations, no per-dot animations.
+   Keyframes stay OUTSIDE Tailwind layers so they are always emitted.
+   ========================================================================== */
 @keyframes da-orb-activate {
   0% {
     opacity: 0;
@@ -213,24 +253,58 @@ body {
 @keyframes da-core-pulse {
   0%,
   100% {
-    opacity: 0.9;
+    opacity: 0.88;
+    transform: scale(1);
   }
   50% {
     opacity: 1;
+    transform: scale(1.02);
   }
 }
 
-.da-orbit-a {
-  animation: da-orbit 16s linear infinite;
+@keyframes da-halo-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
 }
-.da-orbit-b {
-  animation: da-orbit 11s linear infinite reverse;
+
+@keyframes da-scan-spin {
+  to {
+    transform: rotate(1turn);
+  }
 }
+
 .da-orb-activate {
-  animation: da-orb-activate 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: da-orb-activate 1.2s var(--ease-out-quint) both;
 }
 .da-core-pulse {
   animation: da-core-pulse 3.4s ease-in-out infinite;
+}
+.da-halo {
+  animation: da-halo-breathe 5.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+/* A single conic-gradient "scan" arc masked to a hairline ring. Rotating one
+   composited layer is effectively free compared to rotating several bordered
+   rings plus orbiting dots. */
+.da-scan-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 292deg,
+    rgba(34, 211, 238, 0.55) 330deg,
+    rgba(139, 92, 246, 0.9) 352deg,
+    transparent 360deg
+  );
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation: da-scan-spin 8s linear infinite;
+  will-change: transform;
 }
 
 /* ==========================================================================

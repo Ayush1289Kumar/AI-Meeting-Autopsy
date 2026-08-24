@@ -13,7 +13,7 @@ The current look is defined by five recurring ideas:
 1. **Layered glass** — panels sit translucent over the ambient canvas; persistent chrome (sidebar, header, mobile nav) uses `backdrop-filter` blur, while cards use a slightly more opaque tinted surface instead of a blur layer (see §5).
 2. **Neon glow accents** — purple (brand) and cyan (accent) glows on status dots, active nav, buttons, and the AI orb.
 3. **Gradient moments** — used sparingly but deliberately: the `.text-gradient` headline, promo/shimmer surfaces, avatar chips, and the AI orb core.
-4. **Living ambient background** — a fixed neural-network canvas plus soft glow blobs (static in the shell, drifting in the hero) and a faint grid sit behind all content.
+4. **Ambient background** — static CSS glow blobs plus a faint engineering grid sit behind all content (the former live neural-network canvas was removed for performance).
 5. **Micro-motion** — hover lifts (`-translate-y-0.5`), pulsing status dots, floating particles, and an animated shimmer border create a "diagnostic AI" feel.
 
 ## 2. Color Palette
@@ -156,7 +156,8 @@ Keyframes are registered in `tailwind.config.ts` (`theme.extend.keyframes` / `an
 - **Hover lift**: interactive cards and buttons lift `-translate-y-0.5` with an intensified glow shadow.
 - **AI orb choreography** (custom keyframes in `globals.css`, always emitted): `da-orbit` (16s / 11s reverse ring rotation), `da-orb-activate` (1.4s settle-in: fade + scale + blur-out), `da-core-pulse` (3.4s calm breathing).
 - **Loading states**: pulsing/spinning border circle (`animate-spin`) plus the multi-stage processing stepper ("Transcribing audio…", "Identifying speakers…", …).
-- **Reduced motion**: `NeuralBackground` and `MeetingIntro` respect `prefers-reduced-motion: reduce` (static draw / short minimal intro, CSS animations disabled).
+- **Reduced motion**: Lenis smooth scrolling is disabled entirely for users who prefer reduced motion; `MeetingIntro` falls back to a short minimal pulse; the global CSS kill-switch zeroes all decorative animation durations.
+- **Scroll reveals**: dashboard sections enter via a staged `Reveal` primitive (`src/components/motion/reveal.tsx`) — IntersectionObserver-triggered, animating only opacity/transform with `--ease-out-expo` and per-section stagger delays.
 - **Perf note**: after the dashboard-lag reduction pass, the app shell's ambient glow blobs are intentionally **static**; `animate-aurora` now runs only on the hero glow blob, and `animate-shimmer` / `animate-spin-slow` remain registered in Tailwind but are currently unused.
 ## 8. Data Visualization
 
@@ -174,10 +175,10 @@ Recharts powers the analytic charts, customized to match the dark theme. The mar
 ## 9. Signature Visuals & Experiences
 
 ### AI Orb (`AiOrb`)
-The brand signature visual in the hero: concentric diagnostic rings (solid violet + dashed cyan, counter-rotating), fine gradient spokes, an orbiting data node, floating signal particles, and a glowing `BrainCircuit` core on a violet→cyan gradient disc. Mounts with a 1.4s "activation" animation, then rests calm. Tagline: "Not just recording. **We understand.**"
+The brand signature visual in the hero: a breathing violet→cyan halo, one GPU-composited conic-gradient scan arc rotating on a hairline ring, a static faint guide ring, and a glowing `BrainCircuit` core that gently pulses. Mounts with a 1.2s "activation" settle (expo-out), then rests calm — transform/opacity only, no ring stacks or per-dot animations. Tagline: "Not just recording. **We understand.**"
 
-### Neural Background (`NeuralBackground`)
-A fixed full-viewport `<canvas>` behind the dashboard drawing a live "AI network": drifting nodes (violet/blue), connecting lines within 180px, and traveling cyan particles. Denser at the top (hero area), includes a soft radial brand glow, and pauses its loop when the tab is hidden or reduced motion is requested.
+### Ambient Background (replacing `NeuralBackground`)
+The live neural-network `<canvas>` was removed: a full-viewport repainting canvas sitting between a fixed body gradient and large blur layers forced constant recompositing and made scrolling feel rough. The ambient layer is now pure static CSS — `.grid-overlay` plus three blurred brand/blue/accent glow blobs — with zero per-frame cost. Smooth scrolling is handled by Lenis (`SmoothScroll` provider in the root layout, disabled under reduced motion).
 
 ### Meeting Intro (`MeetingIntro`)
 A 3.9s cinematic overlay that plays once on entering the dashboard: "MEETING DETECTED → ANALYZING… → INSIGHTS READY" with an expanding glow, a small AI core blooming into concentric rings, a scan sweep, particle orbit, and floating labels (Speech, Participation, Decisions, Topic Flow). Fully skippable (`Skip intro`), respects reduced motion (1.15s minimal pulse variant), and unmounts itself afterward.
