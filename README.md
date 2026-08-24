@@ -5,7 +5,7 @@ _Analyze. Diagnose. Improve._
 Upload a meeting recording or transcript and get a post-mortem: health score, decisions, action items,
 speaking balance, topic timeline, wasted time and AI recommendations.
 
-Built with Next.js 14 (App Router), TypeScript, Tailwind, Prisma/PostgreSQL and Recharts.
+Built with Next.js 14 (App Router), TypeScript, Tailwind, Prisma/MySQL and Recharts.
 
 ## Quick start
 
