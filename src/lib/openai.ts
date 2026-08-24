@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, WHISPER_API_KEY, WHISPER_MODEL } from "@/lib/env";
+import { HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, WHISPER_MODEL } from "@/lib/env";
 
 let client: OpenAI | null = null;
 let cachedModel: string | null = null;
