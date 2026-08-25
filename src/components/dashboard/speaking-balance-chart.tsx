@@ -1,5 +1,5 @@
 import { Card, CardFooterLink, CardHeader } from "@/components/ui/card";
-import { DonutChart } from "@/components/charts/donut-chart";
+import { DonutChart } from "@/components/charts/lazy";
 import { SPEAKER_COLORS } from "@/lib/constants";
 import { formatDuration } from "@/lib/utils";
 

@@ -1,6 +1,6 @@
 import { EmptyState } from "@/components/common/empty-state";
 import { Card, CardHeader } from "@/components/ui/card";
-import { GroupedBarChart } from "@/components/charts/bar-chart";
+import { GroupedBarChart } from "@/components/charts/lazy";
 import { SpeakerDrilldown } from "@/components/speakers/speaker-drilldown";
 import { resolveSpeakersMeeting } from "@/lib/page-data";
 import { formatDuration, formatTimestamp, initials } from "@/lib/utils";

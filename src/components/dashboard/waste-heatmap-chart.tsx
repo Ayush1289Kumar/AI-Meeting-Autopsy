@@ -1,5 +1,5 @@
 import { Card, CardFooterLink, CardHeader } from "@/components/ui/card";
-import { ValueAreaChart } from "@/components/charts/area-chart";
+import { ValueAreaChart } from "@/components/charts/lazy";
 import { formatDuration, formatTimestamp } from "@/lib/utils";
 
 export interface WasteBand {

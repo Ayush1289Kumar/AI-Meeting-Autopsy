@@ -1,7 +1,7 @@
 import { EmptyState } from "@/components/common/empty-state";
 import { Card, CardHeader } from "@/components/ui/card";
-import { GroupedBarChart } from "@/components/charts/bar-chart";
-import { TrendLineChart } from "@/components/charts/line-chart";
+import { GroupedBarChart } from "@/components/charts/lazy";
+import { TrendLineChart } from "@/components/charts/lazy";
 import { ReportFilters } from "@/components/reports/report-filters";
 import { Suspense } from "react";
 import { getActiveUser } from "@/lib/auth";

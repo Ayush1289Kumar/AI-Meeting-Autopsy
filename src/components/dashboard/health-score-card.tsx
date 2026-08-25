@@ -1,5 +1,5 @@
 import { Card, CardHeader } from "@/components/ui/card";
-import { GaugeChart } from "@/components/charts/gauge-chart";
+import { GaugeChart } from "@/components/charts/lazy";
 import { healthColor, healthLabel } from "@/lib/constants";
 import { Activity } from "lucide-react";
 

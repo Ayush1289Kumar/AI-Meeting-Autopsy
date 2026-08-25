@@ -1,6 +1,6 @@
 import { getActiveUser } from "@/lib/auth";
 import { AppShell } from "@/components/layout/app-shell";
-import { MeetingIntro } from "@/components/intro/MeetingIntro";
+import { MeetingIntroLazy } from "@/components/intro/meeting-intro-lazy";
 
 
 
@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <>
       {/* Plays once on first load, then unmounts itself. Leaves the dashboard untouched. */}
-      <MeetingIntro />
+      <MeetingIntroLazy />
       <AppShell userName={user?.name ?? "Guest"}>{children}</AppShell>
     </>
   );

@@ -1,11 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { HeroSection } from "./hero-section";
 import { AnalysisSection } from "./analysis-section";
 import { KeyHighlights } from "./key-highlights";
 import { ConversationTimeline } from "./conversation-timeline";
-import { BottomSection } from "./bottom-section";
 import { Reveal } from "@/components/motion/reveal";
+
+// BottomSection pulls in Recharts; load it off the critical path.
+const BottomSection = dynamic(() => import("./bottom-section").then((m) => m.BottomSection), {
+  ssr: false,
+  loading: () => <div className="h-72 w-full animate-pulse rounded-xl bg-white/5" aria-hidden />,
+});
 
 export function DashboardShowcase() {
   return (

@@ -1,7 +1,7 @@
 import { EmptyState } from "@/components/common/empty-state";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ValueAreaChart } from "@/components/charts/area-chart";
+import { ValueAreaChart } from "@/components/charts/lazy";
 import { TOPIC_COLORS } from "@/lib/constants";
 import { resolveTopicsMeeting } from "@/lib/page-data";
 import { formatDuration, formatTimestamp } from "@/lib/utils";
