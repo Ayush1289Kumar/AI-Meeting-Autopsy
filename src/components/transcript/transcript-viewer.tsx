@@ -108,7 +108,10 @@ export function TranscriptViewer({
         </span>
       </div>
 
-      <div className="max-h-[70vh] space-y-1 overflow-y-auto rounded-card border border-border bg-card p-3">
+      <div
+        data-lenis-prevent
+        className="max-h-[70vh] space-y-1 overflow-y-auto rounded-card border border-border bg-card p-3"
+      >
         {visible.map((segment) => {
           const highlight = highlightFor(segment);
           const active = currentTime >= segment.startTime && currentTime < segment.endTime;

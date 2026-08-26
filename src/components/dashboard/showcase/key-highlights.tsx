@@ -1,4 +1,7 @@
 import { CheckSquare, ListChecks, UserMinus, Wind } from "lucide-react";
+import { CountUp } from "@/components/motion/count-up";
+import { BlurFade } from "@/components/motion/blur-fade";
+
 
 const HIGHLIGHTS = [
   {
@@ -50,22 +53,25 @@ export function KeyHighlights() {
         Key Highlights
       </h3>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {HIGHLIGHTS.map((h) => (
-          <div
-            key={h.title}
-            className="card-surface flex items-start gap-3 !p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/35"
-          >
-            <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${h.chip} ${h.glow}`}>
-              <h.icon size={16} className={h.text} />
-            </span>
-            <div className="min-w-0">
-              <p className="flex items-baseline gap-1">
-                <span className={`font-display text-xl font-bold tracking-tight ${h.text}`}>{h.value}</span>
-                <span className="truncate text-xs font-medium text-white">{h.title}</span>
-              </p>
-              <p className="mt-0.5 text-[11px] leading-snug text-muted">{h.sub}</p>
+        {HIGHLIGHTS.map((h, i) => (
+          <BlurFade key={h.title} delay={i * 80}>
+            <div
+              className="card-surface flex h-full items-start gap-3 !p-4 transition-all duration-200 hover:-translate-y-1 hover:border-brand/35"
+            >
+              <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${h.chip} ${h.glow}`}>
+                <h.icon size={16} className={h.text} />
+              </span>
+              <div className="min-w-0">
+                <p className="flex items-baseline gap-1">
+                  <span className={`font-display text-2xl font-black tabular tracking-tight ${h.text}`}>
+                    <CountUp to={parseInt(h.value, 10)} duration={1000 + i * 150} />
+                  </span>
+                  <span className="truncate text-xs font-medium text-white">{h.title}</span>
+                </p>
+                <p className="mt-0.5 text-[11px] leading-snug text-muted">{h.sub}</p>
+              </div>
             </div>
-          </div>
+          </BlurFade>
         ))}
       </div>
     </section>

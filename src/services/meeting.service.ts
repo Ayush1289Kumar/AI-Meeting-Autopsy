@@ -29,7 +29,7 @@ export async function getActiveMeeting(userId: string, meetingId?: string) {
     if (meeting) return meeting;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: fullMeetingInclude,
   });
@@ -58,7 +58,7 @@ export async function getActiveMeetingForTranscript(userId: string, meetingId?: 
     if (m) return m;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: transcriptInclude,
   });
@@ -82,7 +82,7 @@ export async function getActiveMeetingForDecisions(userId: string, meetingId?: s
     if (m) return m;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: decisionsInclude,
   });
@@ -106,7 +106,7 @@ export async function getActiveMeetingForActionItems(userId: string, meetingId?:
     if (m) return m;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: actionItemsInclude,
   });
@@ -132,7 +132,7 @@ export async function getActiveMeetingForSpeakers(userId: string, meetingId?: st
     if (m) return m;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: speakersInclude,
   });
@@ -157,7 +157,7 @@ export async function getActiveMeetingForTopics(userId: string, meetingId?: stri
     if (m) return m;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: topicsInclude,
   });
@@ -185,7 +185,7 @@ export async function getActiveMeetingForAutopsy(userId: string, meetingId?: str
     if (m) return m;
   }
   return prisma.meeting.findFirst({
-    where: { uploadedById: userId },
+    where: { uploadedById: userId, status: "ready" },
     orderBy: { date: "desc" },
     include: autopsyInclude,
   });

@@ -42,7 +42,10 @@ export function SpeakerDrilldown({
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Statements</h3>
-          <div className="max-h-72 space-y-1 overflow-y-auto rounded-lg border border-border p-2">
+          <div
+            data-lenis-prevent
+            className="max-h-72 space-y-1 overflow-y-auto rounded-lg border border-border p-2"
+          >
             {statements.length ? (
               statements.map((segment) => (
                 <p key={segment.id} className="text-sm text-white">

@@ -1,30 +1,30 @@
 # Graph Report - AI-Meeting-Autopsy  (2026-08-26)
 
 ## Corpus Check
-- 139 files · ~38,046 words
+- 142 files · ~47,676 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 885 nodes · 1543 edges · 54 communities (40 shown, 14 thin omitted)
+- 793 nodes · 1440 edges · 39 communities (32 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0ad5b906`
+- Built from commit: `489a5103`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - getActiveUser
 - meeting.service.ts
-- lib/utils.ts
+- cn
 - analysis.service.ts
 - devDependencies
-- meetings/route.ts
+- constants.ts
 - dependencies
 - dashboard-showcase.tsx
 - compilerOptions
-- constants.ts
+- lib/utils.ts
 - app-shell.tsx
 - seed.ts
 - middleware.ts
@@ -36,29 +36,12 @@
 - AI Meeting Autopsy — UI/UX Design System
 - 🚀 AI Project Operating System (AI-POS) — Local Development
 - 🚀 AI Project Operating System (AI-POS) — Local Development
-- 5.2 Dashboard Page
+- UI/UX, Animation & Design — Agent Skill Reference
 - SECURITY.md — Local Development
-- 6. Data Models
-- PRD.md — AI Meeting Autopsy
 - AI Meeting Autopsy
-- 8. AI Processing Pipeline (Detailed)
-- Task: Fix Timestamp Parsing, Decision/Action Item Disambiguation, and Score Consistency
 - 01_prd.md
 - 02_architecture.md
-- 12. Implementation Phases
-- 7. API Endpoints
-- run.md
-- 9. UI/UX Design Specifications
 - 03_implementation_plan.md
-- 1. Product Overview
-- 05_rules.md
-- 06_audit.md
-- 08_changelog.md
-- 10_session_handoff.md
-- 04_task_today.md
-- 07_decisions.md
-- 09_known_issues.md
-- 4. Information Architecture & Pages
 - Changelog
 - 04_rules.md
 - 05_audit.md
@@ -73,8 +56,8 @@
 5. `formatTimestamp()` - 25 edges
 6. `Card()` - 22 edges
 7. `CardHeader()` - 21 edges
-8. `PRD.md — AI Meeting Autopsy` - 17 edges
-9. `compilerOptions` - 16 edges
+8. `compilerOptions` - 16 edges
+9. `🚀 AI Project Operating System (AI-POS) — Local Development` - 16 edges
 10. `🚀 AI Project Operating System (AI-POS) — Local Development` - 16 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -86,57 +69,57 @@
   src/app/(dashboard)/decisions/page.tsx → src/lib/page-data.ts
 - `IntegrationsPage()` --calls--> `getActiveUser`  [EXTRACTED]
   src/app/(dashboard)/integrations/page.tsx → src/lib/auth.ts
-- `MeetingAutopsyPage()` --calls--> `formatDuration()`  [EXTRACTED]
-  src/app/(dashboard)/meeting-autopsy/page.tsx → src/lib/date-utils.ts
+- `MeetingAutopsyPage()` --calls--> `healthColor()`  [EXTRACTED]
+  src/app/(dashboard)/meeting-autopsy/page.tsx → src/lib/score-utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (54 total, 14 thin omitted)
+## Communities (39 total, 7 thin omitted)
 
 ### Community 0 - "getActiveUser"
 Cohesion: 0.05
-Nodes (34): POST(), GET(), POST(), GET(), POST(), GET(), GET(), GET() (+26 more)
+Nodes (35): POST(), GET(), POST(), GET(), POST(), GET(), GET(), GET() (+27 more)
 
 ### Community 1 - "meeting.service.ts"
 Cohesion: 0.06
-Nodes (51): GET(), ActionItemsPage(), DecisionsPage(), MeetingAutopsyPage(), parseList(), parsePoints(), TopicsTimelinePage(), TranscriptPage() (+43 more)
+Nodes (40): GET(), ActionItemsPage(), DecisionsPage(), TranscriptPage(), Highlight, PageSearchParams, resolveActionItemsMeeting(), resolveDecisionsMeeting() (+32 more)
 
-### Community 2 - "lib/utils.ts"
-Cohesion: 0.06
-Nodes (52): ActionItemRecord, ActionItemsManager(), AuthForm(), ActionItemRow, ActionItemsTable(), DecisionRow, DecisionsTable(), CHIP (+44 more)
+### Community 2 - "cn"
+Cohesion: 0.07
+Nodes (44): ActionItemRecord, ActionItemsManager(), AuthForm(), ActionItemRow, ActionItemsTable(), CHIP, GLOW, ICONS (+36 more)
 
 ### Community 3 - "analysis.service.ts"
-Cohesion: 0.09
-Nodes (45): GET(), HEALTH_WEIGHTS, balanceRating(), ACTION_KEYWORDS, extractActionItems(), heuristicActionItems(), OWNERLESS_HINTS, analyzeTranscript() (+37 more)
+Cohesion: 0.08
+Nodes (47): GET(), HEALTH_WEIGHTS, balanceRating(), ACTION_KEYWORDS, extractActionItems(), heuristicActionItems(), OWNERLESS_HINTS, analyzeTranscript() (+39 more)
 
 ### Community 4 - "devDependencies"
 Cohesion: 0.05
 Nodes (38): eslint, eslint-config-next, eslint-plugin-security, devDependencies, eslint, eslint-config-next, eslint-plugin-security, postcss (+30 more)
 
-### Community 5 - "meetings/route.ts"
-Cohesion: 0.11
-Nodes (31): GET(), maxDuration, POST(), POST(), AUDIO_EXTENSIONS, MAX_FILE_SIZE_MB, APP_URL, AUTH_SECRET (+23 more)
+### Community 5 - "constants.ts"
+Cohesion: 0.09
+Nodes (38): GET(), maxDuration, POST(), POST(), DecisionsTable(), HealthScoreCard(), DecisionsManager(), ACCEPTED_FILE_EXTENSIONS (+30 more)
 
 ### Community 6 - "dependencies"
 Cohesion: 0.06
-Nodes (33): bcryptjs, class-variance-authority, clsx, date-fns, jose, lucide-react, openai, dependencies (+25 more)
+Nodes (33): bcryptjs, class-variance-authority, clsx, date-fns, jose, lenis, lucide-react, openai (+25 more)
 
 ### Community 7 - "dashboard-showcase.tsx"
 Cohesion: 0.07
-Nodes (26): AiOrb(), AnalysisSection(), HEALTH_METRICS, ACTIONS, BottomSection(), SPEAKERS, STATUS_STYLES, TOPICS (+18 more)
+Nodes (23): AiOrb(), AnalysisSection(), HEALTH_METRICS, ACTIONS, SPEAKERS, STATUS_STYLES, TOPICS, COLORS (+15 more)
 
 ### Community 8 - "compilerOptions"
 Cohesion: 0.07
 Nodes (26): dom, dom.iterable, esnext, next-env.d.ts, .next/types/**/*.ts, node_modules, **/*.ts, **/*.tsx (+18 more)
 
-### Community 9 - "constants.ts"
+### Community 9 - "lib/utils.ts"
 Cohesion: 0.07
-Nodes (42): GET(), ReportsPage(), SpeakersPage(), AreaPoint, ValueAreaChart(), GroupedBarChart(), DonutChart(), DonutDatum (+34 more)
+Nodes (47): GET(), MeetingAutopsyPage(), parseList(), SpeakersPage(), parsePoints(), TopicsTimelinePage(), AreaPoint, DonutDatum (+39 more)
 
 ### Community 10 - "app-shell.tsx"
-Cohesion: 0.10
-Nodes (19): DashboardLayout(), CopilotCard(), MeetingIntroLazy, clamp(), easeInOutCubic(), lerp(), MeetingIntro(), PARTICLE_COLORS (+11 more)
+Cohesion: 0.12
+Nodes (14): DashboardLayout(), CopilotCard(), MeetingIntroLazy, clamp(), easeInOutCubic(), lerp(), MeetingIntro(), PARTICLE_COLORS (+6 more)
 
 ### Community 11 - "seed.ts"
 Cohesion: 0.15
@@ -151,12 +134,12 @@ Cohesion: 0.29
 Nodes (6): extends, plugins, next/core-web-vitals, next/typescript, plugin:security/recommended, security
 
 ### Community 14 - "app/layout.tsx"
-Cohesion: 0.40
-Nodes (3): inter, metadata, spaceGrotesk
+Cohesion: 0.25
+Nodes (6): inter, metadata, spaceGrotesk, viewport, LazyReactLenis, SmoothScroll()
 
 ### Community 21 - "AI Meeting Autopsy — UI/UX Design System"
 Cohesion: 0.05
-Nodes (37): 10. Navigation & Layout, 11. UX Patterns, 1. Core Philosophy, 2. Color Palette, 3. Typography, 4. Layout & Geometry, 5. Surfaces & Visual Effects, 6. Component Library (+29 more)
+Nodes (36): 10. Navigation & Layout, 11. UX Patterns, 1. Core Philosophy, 2. Color Palette, 3. Typography, 4. Layout & Geometry, 5. Surfaces & Visual Effects, 6. Component Library (+28 more)
 
 ### Community 22 - "🚀 AI Project Operating System (AI-POS) — Local Development"
 Cohesion: 0.06
@@ -166,33 +149,17 @@ Nodes (33): `01_prd.md`, `02_architecture.md`, `03_implementation_plan.md`, `04_
 Cohesion: 0.06
 Nodes (33): `01_prd.md`, `02_architecture.md`, `03_implementation_plan.md`, `04_task_today.md`, `05_rules.md`, `06_audit.md`, `07_decisions.md`, `08_changelog.md` (+25 more)
 
-### Community 24 - "5.2 Dashboard Page"
-Cohesion: 0.09
-Nodes (23): 5.10 Settings Page, 5.1 Upload New Meeting (Modal / Page), 5.2.10 Action Items Table, 5.2.11 AI Recommendations Card, 5.2.12 Promo / CTA Card (bottom-left), 5.2.1 Meeting Health Score Card, 5.2.2 Meeting Overview Card, 5.2.3 AI Autopsy Summary Card (+15 more)
+### Community 24 - "UI/UX, Animation & Design — Agent Skill Reference"
+Cohesion: 0.07
+Nodes (29): 1. Component Libraries, 2. Smooth Scroll, 3. Design Taste & Quality Enforcement, 4. Browser Automation & Visual Testing, 5. 3D & Three.js Portfolio References, 6. Reference & Checklists, Agent Instructions (Universal), agentation — `benjitaylor/agentation` (+21 more)
 
 ### Community 25 - "SECURITY.md — Local Development"
 Cohesion: 0.14
 Nodes (13): Check 0 — Local Environment Security, Check 1 — Secret Leak Prevention, Check 2 — Personal Data Flow Audit, Check 3 — Pre-Deploy Production Audit, Check 4 — Deep Security Audit for Complex Logic, Check 5 — Attacker's Perspective Review, Environment Setup, How to Use (+5 more)
 
-### Community 26 - "6. Data Models"
-Cohesion: 0.17
-Nodes (12): 6.10 TranscriptSegment, 6.11 WasteSegment, 6.1 User, 6.2 Organization, 6.3 Meeting, 6.4 Participant, 6.5 Topic, 6.6 Decision (+4 more)
-
-### Community 27 - "PRD.md — AI Meeting Autopsy"
-Cohesion: 0.20
-Nodes (9): 10. Project File Structure, 11. Environment Variables, 13. Seed Data for Development, 14. Key Business Rules, 15. Non-Functional Requirements, 16. Future Enhancements (Out of Scope for V1), 2. Target Users, 3. Tech Stack (Recommended) (+1 more)
-
 ### Community 28 - "AI Meeting Autopsy"
 Cohesion: 0.22
 Nodes (8): AI Meeting Autopsy, AI vs. mock analysis, API, Documentation, Layout, Not implemented, Quick start, Scripts
-
-### Community 29 - "8. AI Processing Pipeline (Detailed)"
-Cohesion: 0.25
-Nodes (8): 8.1 Step 1: Transcription, 8.2 Step 2: Topic Segmentation, 8.3 Step 3: Decision Extraction, 8.4 Step 4: Action Item Extraction, 8.5 Step 5: Problem Detection, 8.6 Step 6: Meeting Health Scoring, 8.7 Step 7: AI Summary & Recommendations, 8. AI Processing Pipeline (Detailed)
-
-### Community 30 - "Task: Fix Timestamp Parsing, Decision/Action Item Disambiguation, and Score Consistency"
-Cohesion: 0.29
-Nodes (6): Issue 1: Fix Timestamp Clock Parsing & Rendering, Issue 2: Refine Decision vs Proposal vs Action Item Disambiguation, Issue 3: Ensure Strict Speaker Attribution for Action Items, Issue 4: Deterministic LLM Sampling & Waste Detection Variance, Task: Fix Timestamp Parsing, Decision/Action Item Disambiguation, and Score Consistency, Verification
 
 ### Community 31 - "01_prd.md"
 Cohesion: 0.29
@@ -202,57 +169,33 @@ Nodes (5): MVP, Purpose, Scope, Success Metrics, Users
 Cohesion: 0.25
 Nodes (6): API, Deployment, Folder Structure, Pages, Security, Tech Stack
 
-### Community 33 - "12. Implementation Phases"
-Cohesion: 0.29
-Nodes (7): 12. Implementation Phases, Phase 1: Foundation (Week 1-2), Phase 2: Core Dashboard UI (Week 3-4), Phase 3: AI Pipeline (Week 5-7), Phase 4: Sub-Pages (Week 8-9), Phase 5: Reports & Polish (Week 10-11), Phase 6: Production Readiness (Week 12)
-
-### Community 34 - "7. API Endpoints"
-Cohesion: 0.29
-Nodes (7): 7.1 Authentication, 7.2 Meetings, 7.3 Meeting Sub-Resources, 7.4 Reports, 7.5 Export, 7.6 Settings, 7. API Endpoints
-
-### Community 35 - "run.md"
-Cohesion: 0.29
-Nodes (6): 1. Install dependencies, 2. Create/sync the database (MySQL 8.0), 3. Seed demo data (optional, for demo mode), 4. Start the dev server, Example: mysql://USER:PASSWORD@localhost:3306/ai_meeting_autopsy, The DATABASE_URL in .env must point to a MySQL database that already exists.
-
-### Community 36 - "9. UI/UX Design Specifications"
-Cohesion: 0.33
-Nodes (6): 9.1 Theme, 9.2 Typography, 9.3 Card Design, 9.4 Charts, 9.5 Responsive Design, 9. UI/UX Design Specifications
-
 ### Community 37 - "03_implementation_plan.md"
 Cohesion: 0.40
 Nodes (3): Current objective, Phases, Roadmap
 
-### Community 38 - "1. Product Overview"
-Cohesion: 0.40
-Nodes (5): 1.1 Product Name, 1.2 Tagline, 1.3 One-Liner, 1.4 Core Value Proposition, 1. Product Overview
-
-### Community 46 - "4. Information Architecture & Pages"
-Cohesion: 0.67
-Nodes (3): 4.1 Navigation Sidebar (persistent), 4.2 Top Header Bar, 4. Information Architecture & Pages
-
 ### Community 49 - "Changelog"
-Cohesion: 0.40
-Nodes (3): 2026-08-11, 2026-08-26, Changelog
+Cohesion: 0.33
+Nodes (4): 2026-08-11, 2026-08-26, 2026-08-26 (2), Changelog
 
 ## Knowledge Gaps
-- **384 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended`, `security`, `securityHeaders` (+379 more)
+- **313 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended`, `security`, `securityHeaders` (+308 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **14 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `prisma` connect `getActiveUser` to `meeting.service.ts`, `analysis.service.ts`, `meetings/route.ts`, `constants.ts`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Why does `getActiveUser` connect `getActiveUser` to `constants.ts`, `app-shell.tsx`, `meetings/route.ts`, `meeting.service.ts`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **Why does `cn()` connect `lib/utils.ts` to `app-shell.tsx`, `dashboard-showcase.tsx`?**
+- **Why does `prisma` connect `getActiveUser` to `meeting.service.ts`, `analysis.service.ts`, `constants.ts`, `lib/utils.ts`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **Why does `getActiveUser` connect `getActiveUser` to `lib/utils.ts`, `app-shell.tsx`, `constants.ts`, `meeting.service.ts`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `lib/utils.ts`, `app-shell.tsx`, `dashboard-showcase.tsx`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **What connects `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended` to the rest of the system?**
-  _384 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _313 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `getActiveUser` be split into smaller, more focused modules?**
-  _Cohesion score 0.05442428730099963 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05333333333333334 - nodes in this community are weakly interconnected._
 - **Should `meeting.service.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.059907834101382486 - nodes in this community are weakly interconnected._
-- **Should `lib/utils.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06201550387596899 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06377551020408163 - nodes in this community are weakly interconnected._
+- **Should `cn` be split into smaller, more focused modules?**
+  _Cohesion score 0.06874717322478517 - nodes in this community are weakly interconnected._

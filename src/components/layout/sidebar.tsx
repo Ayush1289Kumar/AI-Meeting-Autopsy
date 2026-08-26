@@ -23,7 +23,10 @@ export function Sidebar() {
   const withMeeting = (href: string) => (meetingId ? `${href}?meeting=${meetingId}` : href);
 
   return (
-    <aside className="glass-panel z-20 flex w-56 shrink-0 flex-col overflow-y-auto border-r px-4 py-5 md:flex">
+    <aside
+      data-lenis-prevent
+      className="glass-panel z-20 flex w-56 shrink-0 flex-col overflow-y-auto border-r px-4 py-5 md:flex"
+    >
       {/* Brand */}
       <Link href={withMeeting("/dashboard")} className="mb-4 block rounded-lg px-2">
         <div className="flex items-center gap-2.5">

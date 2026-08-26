@@ -5,13 +5,18 @@ import { Activity, UploadCloud } from "lucide-react";
 import { AiOrb } from "./ai-orb";
 import { GlassCard, Overline } from "./primitives";
 import { UploadDialog } from "@/components/meeting/upload-dialog";
+import { AnimatedGradientText } from "@/components/motion/animated-gradient-text";
+import { MagneticButton } from "@/components/motion/magnetic-button";
+import { CountUp } from "@/components/motion/count-up";
+
 
 const METRICS = [
-  { value: "12", label: "Meetings Analyzed" },
-  { value: "92%", label: "Avg. Agenda Completion" },
-  { value: "48", label: "Signals Detected" },
-  { value: "6.2h", label: "Time Saved" },
+  { value: 12, suffix: "", label: "Meetings Analyzed" },
+  { value: 92, suffix: "%", label: "Avg. Agenda Completion" },
+  { value: 48, suffix: "", label: "Signals Detected" },
+  { value: 6.2, decimals: 1, suffix: "h", label: "Time Saved" },
 ];
+
 
 /** Small floating metrics card (upper-right on desktop, stacked on mobile). */
 function StatMetrics({ className }: { className?: string }) {
@@ -21,12 +26,14 @@ function StatMetrics({ className }: { className?: string }) {
         Better meetings build better teams.
       </p>
       <div className="grid grid-cols-2 gap-2.5">
-        {METRICS.map((m) => (
+        {METRICS.map((m, i) => (
           <div
             key={m.label}
             className="rounded-xl border border-white/10 bg-[#0a0d1f]/80 p-3 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-[#0a0d1f]/90"
           >
-            <p className="font-display text-xl font-bold tracking-tight text-white">{m.value}</p>
+            <p className="font-display text-xl font-bold tracking-tight tabular text-white">
+              <CountUp to={m.value} suffix={m.suffix} decimals={m.decimals ?? 0} duration={1200 + i * 200} />
+            </p>
             <p className="mt-0.5 text-[11px] leading-tight text-muted">{m.label}</p>
           </div>
         ))}
@@ -57,10 +64,12 @@ export function HeroSection() {
             <span className="h-2 w-2 rounded-full bg-success shadow-[0_0_10px_2px_rgba(16,185,129,0.7)] animate-pulse-glow" />
             <Overline>AI Meeting Autopsy · Online</Overline>
           </div>
-          <h2 className="mt-3 font-display text-3xl font-bold leading-[1.08] tracking-tight text-white md:text-4xl">
+          <h2 className="mt-3 font-display text-4xl font-black leading-[1.04] tracking-[-0.03em] text-white md:text-5xl">
             The meeting is over.
             <br />
-            The <span className="text-gradient">insight</span> begins.
+            The{" "}
+            <AnimatedGradientText>insight</AnimatedGradientText>
+            {" "}begins.
           </h2>
           <p className="mt-1 font-display text-lg font-semibold tracking-tight text-white/85">
             Your meeting just got <span className="text-gradient font-bold">smarter</span>
@@ -70,21 +79,21 @@ export function HeroSection() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <button
+            <MagneticButton
               type="button"
               onClick={() => setUploadOpen(true)}
-              className="group inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_28px_-8px_rgba(139,92,246,0.9)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand/90 hover:shadow-[0_0_36px_-8px_rgba(139,92,246,1)]"
+              className="group inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_32px_-8px_rgba(139,92,246,0.9)] transition-shadow hover:shadow-[0_0_44px_-8px_rgba(139,92,246,1)]"
             >
               <UploadCloud size={16} className="transition-transform group-hover:-translate-y-0.5" />
               Upload Meeting
-            </button>
-            <button
+            </MagneticButton>
+            <MagneticButton
               type="button"
-              className="inline-flex items-center gap-2 rounded-lg border border-accent/40 bg-accent/10 px-4 py-2.5 text-sm font-semibold text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_22px_-10px_rgba(34,211,238,0.8)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/15 hover:shadow-[0_0_30px_-10px_rgba(34,211,238,1)]"
+              className="inline-flex items-center gap-2 rounded-xl border border-accent/40 bg-accent/10 px-5 py-2.5 text-sm font-bold text-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_22px_-10px_rgba(34,211,238,0.8)] transition-shadow hover:shadow-[0_0_30px_-10px_rgba(34,211,238,1)]"
             >
               <Activity size={16} />
               Start Live Analysis
-            </button>
+            </MagneticButton>
           </div>
 
           {/* subtle AI-intelligence status strip */}

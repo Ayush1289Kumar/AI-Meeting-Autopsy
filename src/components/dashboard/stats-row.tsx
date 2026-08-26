@@ -61,7 +61,7 @@ export function StatsRow({ stats }: { stats: StatCard[] }) {
               </span>
             </div>
             <p
-              className={`font-display text-2xl font-bold tracking-tight ${TONES[stat.tone]} drop-shadow-[0_0_14px_rgba(255,255,255,0.18)]`}
+              className={`font-display text-2xl font-bold tabular-nums tracking-tight ${TONES[stat.tone]} drop-shadow-[0_0_14px_rgba(255,255,255,0.18)]`}
             >
               {stat.value}
             </p>

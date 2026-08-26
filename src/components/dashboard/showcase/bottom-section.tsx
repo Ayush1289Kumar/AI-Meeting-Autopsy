@@ -2,6 +2,8 @@
 
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { GlassCard } from "./primitives";
+import { CountUp } from "@/components/motion/count-up";
+import { BlurFade } from "@/components/motion/blur-fade";
 
 /* ---------- Speaking Distribution ---------- */
 const SPEAKERS = [
@@ -30,7 +32,8 @@ function SpeakingDonut() {
               paddingAngle={2}
               stroke="none"
               cornerRadius={4}
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={800}
             >
               {data.map((d) => (
                 <Cell key={d.name} fill={d.color} style={{ filter: `drop-shadow(0 0 5px ${d.color}66)` }} />
@@ -40,19 +43,22 @@ function SpeakingDonut() {
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-[11px] font-medium uppercase tracking-wider text-muted">Total</span>
-          <span className="font-display text-2xl font-bold tracking-tight text-white">58 min</span>
+          <span className="font-display text-2xl font-bold tracking-tight text-white flex items-baseline">
+            <CountUp to={58} duration={1200} />
+            <span className="ml-0.5 text-xs text-muted font-normal">min</span>
+          </span>
         </div>
       </div>
       <ul className="mt-3 space-y-2">
-        {SPEAKERS.map((s) => (
+        {SPEAKERS.map((s, i) => (
           <li key={s.name} className="flex items-center gap-2 text-xs">
             <span
               className="h-2.5 w-2.5 rounded-full"
               style={{ backgroundColor: s.color, boxShadow: `0 0 8px ${s.color}` }}
             />
             <span className="flex-1 font-medium text-white">{s.name}</span>
-            <span className="text-muted">
-              {s.minutes}m · {s.pct}%
+            <span className="text-muted font-mono tabular">
+              <CountUp to={s.minutes} duration={1000 + i * 100} />m · <CountUp to={s.pct} duration={1000 + i * 100} />%
             </span>
           </li>
         ))}
@@ -83,11 +89,13 @@ function TopTopics() {
                 <span className="font-display text-[11px] font-bold text-muted">{i + 1}</span>
                 <span className="font-medium text-white">{t.name}</span>
               </span>
-              <span className="font-semibold text-muted">{t.minutes} min</span>
+              <span className="font-semibold text-muted font-mono tabular">
+                <CountUp to={t.minutes} duration={1100 + i * 100} /> min
+              </span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-white/8">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-brand via-ai to-accent"
+                className="h-full rounded-full bg-gradient-to-r from-brand via-ai to-accent transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)]"
                 style={{ width: `${(t.minutes / max) * 100}%`, boxShadow: "0 0 10px rgba(139,92,246,0.6)" }}
               />
             </div>
@@ -123,7 +131,7 @@ function ActionItems() {
             className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.03] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/25 hover:bg-white/[0.05]"
           >
             <span
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-lg"
               style={{ backgroundColor: a.avatar, boxShadow: `0 0 14px -3px ${a.avatar}` }}
             >
               {a.initials}
@@ -131,7 +139,7 @@ function ActionItems() {
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-white">{a.task}</p>
               <p className="text-[11px] text-muted">
-                {a.owner} · {a.due}
+                {a.owner} · <span className="font-mono tabular">{a.due}</span>
               </p>
             </div>
             <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold ${STATUS_STYLES[a.tone]}`}>
@@ -147,9 +155,15 @@ function ActionItems() {
 export function BottomSection() {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <SpeakingDonut />
-      <TopTopics />
-      <ActionItems />
+      <BlurFade delay={0}>
+        <SpeakingDonut />
+      </BlurFade>
+      <BlurFade delay={80}>
+        <TopTopics />
+      </BlurFade>
+      <BlurFade delay={160}>
+        <ActionItems />
+      </BlurFade>
     </div>
   );
-}
+}

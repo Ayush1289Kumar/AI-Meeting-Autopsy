@@ -48,7 +48,7 @@ body {
 }
 
 @layer base {
-  /* Display type for headings — Space Grotesk, tight tracking, strong weight */
+  /* Display type for headings — Sora, tight tracking, strong weight */
   h1,
   h2,
   h3,
@@ -191,15 +191,41 @@ body {
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* --- Native smooth scrolling ----------------------------------------------
-   Lenis was removed in favor of the browser's own scrolling (zero wheel-event
-   hijacking, zero per-frame work). Smooth behavior applies only for users who
-   have not requested reduced motion, and only for programmatic/anchor jumps —
-   physical wheel/touch input is always handled natively by the browser. */
+/* --- Smooth scrolling ------------------------------------------------------
+   Lenis owns window scrolling when mounted (see SmoothScroll provider); these
+   are the official rules it requires. The native `scroll-behavior: smooth`
+   fallback below still applies whenever Lenis is NOT active (reduced-motion
+   users, or before the idle-loaded provider mounts). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+/* Nested scrollables opt out of Lenis' wheel hijack via `data-lenis-prevent`;
+   this keeps their native momentum contained instead of chaining to page scroll. */
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
 @media (prefers-reduced-motion: no-preference) {
-  html {
+  html:not(.lenis) {
     scroll-behavior: smooth;
   }
+}
+
+/* --- Keyboard focus --------------------------------------------------------
+   Visible, on-brand focus ring for keyboard users (front-end checklist a11y).
+   `:focus-visible` only shows for keyboard navigation, not mouse clicks. */
+:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.75);
+  outline-offset: 2px;
 }
 
 /* --- Scroll-reveal system ------------------------------------------------ */
@@ -322,3 +348,394 @@ body {
   }
 }
 
+/* ==========================================================================
+   Dialog entrance keyframe — used via Tailwind arbitrary animation class:
+   animate-[dialog-in_0.3s_cubic-bezier(0.16,1,0.3,1)_both]
+   ========================================================================== */
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ==========================================================================
+   CSS @property for animated gradient text on landing hero.
+   Smooth hue-angle rotation in supporting browsers; .text-gradient static
+   fallback fires for older browsers and reduced-motion users.
+   ========================================================================== */
+@property --grad-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes gradient-rotate {
+  to {
+    --grad-angle: 360deg;
+  }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(
+    var(--grad-angle),
+    #8b5cf6 0%,
+    #22d3ee 35%,
+    #10b981 70%,
+    #8b5cf6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-rotate 8s linear infinite;
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, filter;
+}
+
+.animated-gradient-text:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 16px rgba(139, 92, 246, 0.5));
+  animation: gradient-rotate 3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-text {
+    animation: none;
+    background: linear-gradient(90deg, #8b5cf6, #22d3ee 60%, #10b981);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* ==========================================================================
+   Utility layer additions
+   ========================================================================== */
+@layer utilities {
+  /* tabular-nums — stops numbers jittering when values change */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Consistent large breathing room for landing page sections */
+  .section-pad {
+    padding-top: clamp(4rem, 8vw, 8rem);
+    padding-bottom: clamp(4rem, 8vw, 8rem);
+  }
+}
+
+/* Subtle grain texture for premium depth on landing hero (no performance cost) */
+.noise-overlay {
+  position: relative;
+  isolation: isolate;
+}
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  opacity: 0.022;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* ==========================================================================
+   BlurFade — CSS-native implementation for the BlurFade motion primitive.
+   The component sets CSS custom properties; these rules consume them.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .blur-fade-root {
+    opacity: 0;
+    transform: translateY(var(--blur-fade-y, 8px));
+    filter: blur(var(--blur-fade-blur, 6px));
+    transition:
+      opacity var(--blur-fade-duration, 600ms) cubic-bezier(0.16, 1, 0.3, 1)
+        var(--blur-fade-delay, 0ms),
+      transform var(--blur-fade-duration, 600ms) cubic-bezier(0.16, 1, 0.3, 1)
+        var(--blur-fade-delay, 0ms),
+      filter var(--blur-fade-duration, 600ms) cubic-bezier(0.16, 1, 0.3, 1)
+        var(--blur-fade-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+
+  .blur-fade-root.blur-fade-visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Reduced-motion: content always fully visible, no transition */
+@media (prefers-reduced-motion: reduce) {
+  .blur-fade-root {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes da-core-pulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes da-halo-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes da-scan-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.da-orb-activate {
+  animation: da-orb-activate 1.2s var(--ease-out-quint) both;
+}
+.da-core-pulse {
+  animation: da-core-pulse 3.4s ease-in-out infinite;
+}
+.da-halo {
+  animation: da-halo-breathe 5.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+/* A single conic-gradient "scan" arc masked to a hairline ring. Rotating one
+   composited layer is effectively free compared to rotating several bordered
+   rings plus orbiting dots. */
+.da-scan-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 292deg,
+    rgba(34, 211, 238, 0.55) 330deg,
+    rgba(139, 92, 246, 0.9) 352deg,
+    transparent 360deg
+  );
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation: da-scan-spin 8s linear infinite;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   Performance & accessibility: honor prefers-reduced-motion globally.
+   Kills the infinite decorative animations (aurora blobs, glow pulses,
+   shimmer) and turns hover transitions into near-instant fades, which both
+   respects user preferences and removes constant GPU/paint work.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ==========================================================================
+   Dialog entrance keyframe — used via Tailwind arbitrary animation class:
+   animate-[dialog-in_0.3s_cubic-bezier(0.16,1,0.3,1)_both]
+   ========================================================================== */
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ==========================================================================
+   CSS @property for animated gradient text on landing hero.
+   Smooth hue-angle rotation in supporting browsers; .text-gradient static
+   fallback fires for older browsers and reduced-motion users.
+   ========================================================================== */
+@property --grad-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes gradient-rotate {
+  to {
+    --grad-angle: 360deg;
+  }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(
+    var(--grad-angle),
+    #8b5cf6 0%,
+    #22d3ee 35%,
+    #10b981 70%,
+    #8b5cf6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-rotate 8s linear infinite;
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, filter;
+}
+
+.animated-gradient-text:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 16px rgba(139, 92, 246, 0.5));
+  animation: gradient-rotate 3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-text {
+    animation: none;
+    background: linear-gradient(90deg, #8b5cf6, #22d3ee 60%, #10b981);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* ==========================================================================
+   Utility layer additions
+   ========================================================================== */
+@layer utilities {
+  /* tabular-nums — stops numbers jittering when values change */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Consistent large breathing room for landing page sections */
+  .section-pad {
+    padding-top: clamp(4rem, 8vw, 8rem);
+    padding-bottom: clamp(4rem, 8vw, 8rem);
+  }
+}
+
+/* Subtle grain texture for premium depth on landing hero (no performance cost) */
+.noise-overlay {
+  position: relative;
+  isolation: isolate;
+}
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  opacity: 0.022;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* ==========================================================================
+   BlurFade — CSS-native implementation for the BlurFade motion primitive.
+   The component sets CSS custom properties; these rules consume them.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .blur-fade-root {
+    opacity: 0;
+    transform: translateY(var(--blur-fade-y, 8px));
+    filter: blur(var(--blur-fade-blur, 6px));
+    transition:
+      opacity var(--blur-fade-duration, 600ms) cubic-bezier(0.16, 1, 0.3, 1)
+        var(--blur-fade-delay, 0ms),
+      transform var(--blur-fade-duration, 600ms) cubic-bezier(0.16, 1, 0.3, 1)
+        var(--blur-fade-delay, 0ms),
+      filter var(--blur-fade-duration, 600ms) cubic-bezier(0.16, 1, 0.3, 1)
+        var(--blur-fade-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+
+  .blur-fade-root.blur-fade-visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Reduced-motion: content always fully visible, no transition */
+@media (prefers-reduced-motion: reduce) {
+  .blur-fade-root {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+/* fade-in keyframe used by tooltip animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+/* ==========================================================================
+   Glassmorphism Card definition
+   ========================================================================== */
+.glass-card {
+  position: relative;
+  border-radius: var(--radius-card, 16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.25rem;
+  background: rgba(10, 13, 31, 0.65);
+  backdrop-filter: blur(14px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 45px -30px rgba(0, 0, 0, 0.7),
+    0 0 32px -20px rgba(139, 92, 246, 0.25);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+  background: rgba(10, 13, 31, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 50px -26px rgba(0, 0, 0, 0.8),
+    0 0 48px -20px rgba(139, 92, 246, 0.6);
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(139, 92, 246, 0.2) 40%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.55;
+}

@@ -2,6 +2,12 @@
 
 ## Changelog
 
+### 2026-08-26 (2)
+
+- Re-added Lenis smooth scrolling, done correctly: idle-loaded provider, reactive reduced-motion teardown, `data-lenis-prevent` on all nested scrollables (transcript viewer, dialog, speaker drilldown, sidebar), and the full official CSS rule set with a native CSS fallback.
+- Implemented the UI/UX animation toolkit gaps: Open Graph / Twitter metadata with `metadataBase` and `themeColor`, a branded static OG image (`src/app/opengraph-image.png`), skip-to-content link + `#main-content` target, global `:focus-visible` ring, and `Reveal` stagger motion on the Settings and Integrations pages.
+- Verified end-to-end in a live browser: Lenis activates (`lenis-smooth`), wheel input scrolls smoothly, nested scrollers keep native behavior, zero console errors, production build green.
+
 ### 2026-08-26
 
 - Removed Lenis smooth scrolling entirely (uninstalled the dependency, deleted the `SmoothScroll` provider); scrolling is now fully native with CSS-only smooth anchor jumps.

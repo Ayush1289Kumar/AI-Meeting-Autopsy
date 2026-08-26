@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Sidebar } from "@/components/layout/sidebar";
+
 import { Header } from "@/components/layout/header";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 
@@ -19,10 +19,11 @@ function ShellInner({ userName, children }: { userName: string; children: React.
         <div className="absolute bottom-0 left-1/3 h-[420px] w-[420px] rounded-full bg-accent/10 blur-[150px]" />
       </div>
 
-      <Sidebar />
-      <div className="relative flex min-w-0 flex-1 flex-col">
+      <div className="relative flex min-w-0 flex-1 flex-col pt-4">
         <Header userName={userName} />
-        <main className="relative flex-1 px-4 pb-24 pt-5 md:px-6 md:pb-8">{children}</main>
+        <main id="main-content" tabIndex={-1} className="relative flex-1 px-4 pb-24 pt-12 outline-none md:px-6 md:pb-8">
+          {children}
+        </main>
         <MobileBottomNav />
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { Reveal } from "@/components/motion/reveal";
 
 const LLM_MODELS = [
   "auto",
@@ -71,8 +72,9 @@ export function IntegrationsForm({ settings }: { settings: IntegrationsValues })
   return (
     <div className="space-y-4">
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader title="AI Settings" />
+        <Reveal>
+          <Card>
+            <CardHeader title="AI Settings" />
           <div className="grid gap-3">
             <Field label="LLM model">
               <Select
@@ -129,7 +131,9 @@ export function IntegrationsForm({ settings }: { settings: IntegrationsValues })
             </Field>
           </div>
         </Card>
+        </Reveal>
 
+        <Reveal delay={80}>
         <Card>
           <CardHeader title="Upcoming Integrations" />
           <div className="grid gap-3">
@@ -157,14 +161,17 @@ export function IntegrationsForm({ settings }: { settings: IntegrationsValues })
             </p>
           </div>
         </Card>
+        </Reveal>
       </div>
 
+      <Reveal delay={140} variant="scale">
       <div className="flex items-center gap-3">
         <Button onClick={save} disabled={saving}>
           {saving ? "Saving…" : "Save integrations"}
         </Button>
         {saved ? <span className="text-xs text-success">Integrations saved.</span> : null}
       </div>
+      </Reveal>
     </div>
   );
 }

@@ -8,8 +8,9 @@ export function GlassCard({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={cn("card-surface", className)}>{children}</div>;
+  return <div className={cn("glass-card", className)}>{children}</div>;
 }
+
 
 /** Small uppercase overline label. */
 export function Overline({ children }: { children: React.ReactNode }) {

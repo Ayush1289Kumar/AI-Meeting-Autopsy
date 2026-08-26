@@ -10,7 +10,7 @@
 - Auth: JWT cookie sessions with jose
 - AI: Hugging Face LLM (Llama / DeepSeek) + Whisper, optional with heuristic fallback
 - Charts: Recharts
-- Scrolling: native browser scrolling (`scroll-behavior: smooth` via CSS; no scroll libraries)
+- Scrolling: Lenis smooth scroll (`SmoothScroll` provider — root mode, idle-loaded, reactive reduced-motion handling, `data-lenis-prevent` on nested scrollables) with a native CSS `scroll-behavior` fallback
 
 ## Folder Structure
 

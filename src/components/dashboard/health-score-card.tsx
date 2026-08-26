@@ -2,6 +2,8 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { GaugeChart } from "@/components/charts/lazy";
 import { healthColor, healthLabel } from "@/lib/constants";
 import { Activity } from "lucide-react";
+import { CountUp } from "@/components/motion/count-up";
+
 
 export function HealthScoreCard({ score, percentile }: { score: number; percentile: number | null }) {
   const color = healthColor(score);
@@ -21,10 +23,10 @@ export function HealthScoreCard({ score, percentile }: { score: number; percenti
         <GaugeChart score={score} color={color} />
       </div>
       <p
-        className="text-center text-sm font-semibold uppercase tracking-wide"
+        className="text-center font-mono text-sm font-semibold tabular uppercase tracking-wide"
         style={{ color, textShadow: `0 0 18px ${color}66` }}
       >
-        {healthLabel(score)}
+        <CountUp to={score} duration={1400} className="font-mono tabular" /> — {healthLabel(score)}
       </p>
       <p className="mt-1 text-center text-xs text-muted">
         {percentile === null ? "First meeting analyzed" : `Better than ${Math.round(percentile)}% of your meetings`}
