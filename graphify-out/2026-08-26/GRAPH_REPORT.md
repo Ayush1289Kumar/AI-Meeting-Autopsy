@@ -1,16 +1,16 @@
-# Graph Report - AI-Meeting-Autopsy  (2026-08-26)
+# Graph Report - AI_Meeting_Autopsy  (2026-08-24)
 
 ## Corpus Check
-- 139 files · ~38,046 words
+- 142 files · ~74,733 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 885 nodes · 1543 edges · 54 communities (40 shown, 14 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.5)
+- 843 nodes · 1460 edges · 49 communities (39 shown, 10 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0ad5b906`
+- Built from commit: `9e02e3c0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -59,20 +59,15 @@
 - 07_decisions.md
 - 09_known_issues.md
 - 4. Information Architecture & Pages
-- Changelog
-- 04_rules.md
-- 05_audit.md
-- 06_decisions.md
-- 08_known_issues.md
 
 ## God Nodes (most connected - your core abstractions)
-1. `getActiveUser` - 31 edges
+1. `getActiveUser` - 29 edges
 2. `formatDuration()` - 28 edges
-3. `prisma` - 28 edges
+3. `prisma` - 27 edges
 4. `cn()` - 26 edges
 5. `formatTimestamp()` - 25 edges
-6. `Card()` - 22 edges
-7. `CardHeader()` - 21 edges
+6. `Card()` - 21 edges
+7. `CardHeader()` - 20 edges
 8. `PRD.md — AI Meeting Autopsy` - 17 edges
 9. `compilerOptions` - 16 edges
 10. `🚀 AI Project Operating System (AI-POS) — Local Development` - 16 edges
@@ -80,63 +75,63 @@
 ## Surprising Connections (you probably didn't know these)
 - `DashboardLayout()` --calls--> `getActiveUser`  [EXTRACTED]
   src/app/(dashboard)/layout.tsx → src/lib/auth.ts
+- `SettingsPage()` --calls--> `getActiveUser`  [EXTRACTED]
+  src/app/(dashboard)/settings/page.tsx → src/lib/auth.ts
 - `ActionItemsPage()` --calls--> `resolveActionItemsMeeting()`  [EXTRACTED]
   src/app/(dashboard)/action-items/page.tsx → src/lib/page-data.ts
 - `DecisionsPage()` --calls--> `resolveDecisionsMeeting()`  [EXTRACTED]
   src/app/(dashboard)/decisions/page.tsx → src/lib/page-data.ts
-- `IntegrationsPage()` --calls--> `getActiveUser`  [EXTRACTED]
-  src/app/(dashboard)/integrations/page.tsx → src/lib/auth.ts
 - `MeetingAutopsyPage()` --calls--> `formatDuration()`  [EXTRACTED]
   src/app/(dashboard)/meeting-autopsy/page.tsx → src/lib/date-utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (54 total, 14 thin omitted)
+## Communities (49 total, 10 thin omitted)
 
 ### Community 0 - "getActiveUser"
 Cohesion: 0.05
-Nodes (34): POST(), GET(), POST(), GET(), POST(), GET(), GET(), GET() (+26 more)
+Nodes (35): POST(), GET(), POST(), GET(), POST(), GET(), GET(), GET() (+27 more)
 
 ### Community 1 - "meeting.service.ts"
 Cohesion: 0.06
-Nodes (51): GET(), ActionItemsPage(), DecisionsPage(), MeetingAutopsyPage(), parseList(), parsePoints(), TopicsTimelinePage(), TranscriptPage() (+43 more)
+Nodes (53): GET(), ActionItemsPage(), DecisionsPage(), MeetingAutopsyPage(), parseList(), SettingsPage(), parsePoints(), TopicsTimelinePage() (+45 more)
 
 ### Community 2 - "lib/utils.ts"
-Cohesion: 0.06
-Nodes (52): ActionItemRecord, ActionItemsManager(), AuthForm(), ActionItemRow, ActionItemsTable(), DecisionRow, DecisionsTable(), CHIP (+44 more)
+Cohesion: 0.05
+Nodes (69): GET(), SpeakersPage(), ActionItemRecord, ActionItemsManager(), AuthForm(), DonutChart(), DonutDatum, ActionItemRow (+61 more)
 
 ### Community 3 - "analysis.service.ts"
 Cohesion: 0.09
-Nodes (45): GET(), HEALTH_WEIGHTS, balanceRating(), ACTION_KEYWORDS, extractActionItems(), heuristicActionItems(), OWNERLESS_HINTS, analyzeTranscript() (+37 more)
+Nodes (44): GET(), balanceRating(), ACTION_KEYWORDS, extractActionItems(), heuristicActionItems(), OWNERLESS_HINTS, analyzeTranscript(), speakerStats() (+36 more)
 
 ### Community 4 - "devDependencies"
 Cohesion: 0.05
 Nodes (38): eslint, eslint-config-next, eslint-plugin-security, devDependencies, eslint, eslint-config-next, eslint-plugin-security, postcss (+30 more)
 
 ### Community 5 - "meetings/route.ts"
-Cohesion: 0.11
-Nodes (31): GET(), maxDuration, POST(), POST(), AUDIO_EXTENSIONS, MAX_FILE_SIZE_MB, APP_URL, AUTH_SECRET (+23 more)
+Cohesion: 0.12
+Nodes (29): GET(), maxDuration, POST(), POST(), APP_URL, AUTH_SECRET, DATABASE_URL, getAuthSecret() (+21 more)
 
 ### Community 6 - "dependencies"
 Cohesion: 0.06
 Nodes (33): bcryptjs, class-variance-authority, clsx, date-fns, jose, lucide-react, openai, dependencies (+25 more)
 
 ### Community 7 - "dashboard-showcase.tsx"
-Cohesion: 0.07
-Nodes (26): AiOrb(), AnalysisSection(), HEALTH_METRICS, ACTIONS, BottomSection(), SPEAKERS, STATUS_STYLES, TOPICS (+18 more)
+Cohesion: 0.08
+Nodes (23): AiOrb(), AnalysisSection(), HEALTH_METRICS, ACTIONS, BottomSection(), SPEAKERS, STATUS_STYLES, TOPICS (+15 more)
 
 ### Community 8 - "compilerOptions"
 Cohesion: 0.07
 Nodes (26): dom, dom.iterable, esnext, next-env.d.ts, .next/types/**/*.ts, node_modules, **/*.ts, **/*.tsx (+18 more)
 
 ### Community 9 - "constants.ts"
-Cohesion: 0.07
-Nodes (42): GET(), ReportsPage(), SpeakersPage(), AreaPoint, ValueAreaChart(), GroupedBarChart(), DonutChart(), DonutDatum (+34 more)
+Cohesion: 0.16
+Nodes (14): GaugeChart(), HealthScoreCard(), ProcessingStatus(), Mode, Dialog(), ACCEPTED_FILE_EXTENSIONS, AUDIO_EXTENSIONS, HEALTH_WEIGHTS (+6 more)
 
 ### Community 10 - "app-shell.tsx"
 Cohesion: 0.10
-Nodes (19): DashboardLayout(), CopilotCard(), MeetingIntroLazy, clamp(), easeInOutCubic(), lerp(), MeetingIntro(), PARTICLE_COLORS (+11 more)
+Nodes (19): DashboardLayout(), CopilotCard(), clamp(), easeInOutCubic(), lerp(), MeetingIntro(), PARTICLE_COLORS, AppShell() (+11 more)
 
 ### Community 11 - "seed.ts"
 Cohesion: 0.15
@@ -156,7 +151,7 @@ Nodes (3): inter, metadata, spaceGrotesk
 
 ### Community 21 - "AI Meeting Autopsy — UI/UX Design System"
 Cohesion: 0.05
-Nodes (37): 10. Navigation & Layout, 11. UX Patterns, 1. Core Philosophy, 2. Color Palette, 3. Typography, 4. Layout & Geometry, 5. Surfaces & Visual Effects, 6. Component Library (+29 more)
+Nodes (36): 10. Navigation & Layout, 11. UX Patterns, 1. Core Philosophy, 2. Color Palette, 3. Typography, 4. Layout & Geometry, 5. Surfaces & Visual Effects, 6. Component Library (+28 more)
 
 ### Community 22 - "🚀 AI Project Operating System (AI-POS) — Local Development"
 Cohesion: 0.06
@@ -199,8 +194,8 @@ Cohesion: 0.29
 Nodes (5): MVP, Purpose, Scope, Success Metrics, Users
 
 ### Community 32 - "02_architecture.md"
-Cohesion: 0.25
-Nodes (6): API, Deployment, Folder Structure, Pages, Security, Tech Stack
+Cohesion: 0.29
+Nodes (5): API, Deployment, Folder Structure, Security, Tech Stack
 
 ### Community 33 - "12. Implementation Phases"
 Cohesion: 0.29
@@ -230,29 +225,25 @@ Nodes (5): 1.1 Product Name, 1.2 Tagline, 1.3 One-Liner, 1.4 Core Value Proposit
 Cohesion: 0.67
 Nodes (3): 4.1 Navigation Sidebar (persistent), 4.2 Top Header Bar, 4. Information Architecture & Pages
 
-### Community 49 - "Changelog"
-Cohesion: 0.40
-Nodes (3): 2026-08-11, 2026-08-26, Changelog
-
 ## Knowledge Gaps
-- **384 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended`, `security`, `securityHeaders` (+379 more)
+- **370 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended`, `security`, `nextConfig` (+365 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **14 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `prisma` connect `getActiveUser` to `meeting.service.ts`, `analysis.service.ts`, `meetings/route.ts`, `constants.ts`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Why does `getActiveUser` connect `getActiveUser` to `constants.ts`, `app-shell.tsx`, `meetings/route.ts`, `meeting.service.ts`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `prisma` connect `getActiveUser` to `meeting.service.ts`, `analysis.service.ts`, `meetings/route.ts`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+- **Why does `getActiveUser` connect `getActiveUser` to `meeting.service.ts`, `app-shell.tsx`, `lib/utils.ts`, `meetings/route.ts`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Why does `cn()` connect `lib/utils.ts` to `app-shell.tsx`, `dashboard-showcase.tsx`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **What connects `next/core-web-vitals`, `next/typescript`, `plugin:security/recommended` to the rest of the system?**
-  _384 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _370 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `getActiveUser` be split into smaller, more focused modules?**
-  _Cohesion score 0.05442428730099963 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05157894736842105 - nodes in this community are weakly interconnected._
 - **Should `meeting.service.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.059907834101382486 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.055178652193577565 - nodes in this community are weakly interconnected._
 - **Should `lib/utils.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06201550387596899 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05192107995846314 - nodes in this community are weakly interconnected._

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { Field, Input, Select } from "@/components/ui/input";
 import { MEETING_TYPES } from "@/lib/constants";
 
 export interface SettingsValues {
@@ -30,11 +30,6 @@ export function SettingsForm({
   const [values, setValues] = useState<SettingsValues>(settings);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [testingConnection, setTestingConnection] = useState(false);
-  const [testResult, setTestResult] = useState<{
-    huggingface?: { success: boolean; message: string };
-    whisper?: { success: boolean; message: string };
-  } | null>(null);
 
   function set<K extends keyof SettingsValues>(key: K, value: SettingsValues[K]) {
     setValues((current) => ({ ...current, [key]: value }));
@@ -49,31 +44,9 @@ export function SettingsForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      document.documentElement.classList.toggle("light", values.theme === "light");
       setSaved(true);
     } finally {
       setSaving(false);
-    }
-  }
-
-  async function testConnection() {
-    setTestingConnection(true);
-    setTestResult(null);
-    try {
-      const response = await fetch("/api/settings/test-connection", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: values.llmModel }),
-      });
-      const data = await response.json();
-      setTestResult(data);
-    } catch {
-      setTestResult({
-        huggingface: { success: false, message: "An unexpected error occurred." },
-        whisper: { success: false, message: "An unexpected error occurred." },
-      });
-    } finally {
-      setTestingConnection(false);
     }
   }
 
@@ -129,89 +102,6 @@ export function SettingsForm({
         </Card>
 
         <Card>
-          <CardHeader title="AI Settings" />
-          <div className="grid gap-3">
-            <Field label="LLM model">
-              <Select
-                value={
-                  ["auto", "meta-llama/Llama-3.1-8B-Instruct", "meta-llama/Llama-3.1-70B-Instruct", "deepseek-ai/DeepSeek-V3-0324"].includes(values.llmModel)
-                    ? values.llmModel
-                    : "meta-llama/Llama-3.1-8B-Instruct"
-                }
-                onChange={(event) => set("llmModel", event.target.value)}
-              >
-                {[
-                  "auto",
-                  "meta-llama/Llama-3.1-8B-Instruct",
-                  "meta-llama/Llama-3.1-70B-Instruct",
-                  "deepseek-ai/DeepSeek-V3-0324",
-                ].map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-            
-            <div className="mt-1 flex flex-col gap-2">
-              <div>
-                <Button type="button" onClick={testConnection} disabled={testingConnection} className="bg-brand/20 border border-brand/40 hover:bg-brand/35 text-white text-xs px-3 py-1">
-                  {testingConnection ? "Testing APIs..." : "Test AI Connections"}
-                </Button>
-              </div>
-              {testResult ? (
-                <div className="grid gap-1 text-xs">
-                  {testResult.huggingface ? (
-                    <div className="flex items-start gap-2">
-                      <span className="text-muted font-medium w-24">LLM (Hugging Face):</span>
-                      <span className={testResult.huggingface.success ? "text-success" : "text-danger"}>
-                        {testResult.huggingface.message}
-                      </span>
-                    </div>
-                  ) : null}
-                  {testResult.whisper ? (
-                    <div className="flex items-start gap-2">
-                      <span className="text-muted font-medium w-24">Audio (Whisper):</span>
-                      <span className={testResult.whisper.success ? "text-success" : "text-danger"}>
-                        {testResult.whisper.message}
-                      </span>
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
-            <Field label="Transcription language">
-              <Input
-                value={values.transcriptionLang}
-                onChange={(event) => set("transcriptionLang", event.target.value)}
-              />
-            </Field>
-            <Field label="Custom analysis focus prompt">
-              <Textarea
-                value={values.customPrompt ?? ""}
-                onChange={(event) => set("customPrompt", event.target.value)}
-                placeholder="e.g. focus on risks and blockers"
-              />
-            </Field>
-          </div>
-        </Card>
-
-        <Card>
-          <CardHeader title="Appearance" />
-          <div className="grid gap-3">
-            <Field label="Theme">
-              <Select value={values.theme} onChange={(event) => set("theme", event.target.value)}>
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-              </Select>
-            </Field>
-            <Field label="Accent color">
-              <Input type="color" value={values.accentColor} onChange={(event) => set("accentColor", event.target.value)} />
-            </Field>
-          </div>
-        </Card>
-
-        <Card>
           <CardHeader title="Usage" />
           <dl className="grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg bg-white/5 p-3">
@@ -224,7 +114,7 @@ export function SettingsForm({
             </div>
           </dl>
           <p className="mt-3 text-xs text-muted">
-            Integrations (Google Calendar, Jira, Slack, Zoom) are planned but not part of this version.
+            AI and API settings live on the <a href="/integrations" className="text-brand hover:underline">Integrations</a> page.
           </p>
         </Card>
       </div>

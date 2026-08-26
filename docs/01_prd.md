@@ -23,9 +23,9 @@ Build an AI-powered meeting analysis app that ingests audio or transcript and su
 
 ## Scope
 
-- Local development with Next.js, Prisma, Postgres
-- OpenAI integration optional for AI enhancement
-- No billing, no external integrations beyond OpenAI
+- Local development with Next.js, Prisma, MySQL
+- AI integrations (Hugging Face LLM + Whisper) optional, managed on the dedicated Integrations page
+- No billing, no third-party integrations beyond the AI providers (calendar/task/communication connectors are listed as "Planned" on the Integrations page)
 
 ## Success Metrics
 

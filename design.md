@@ -131,10 +131,8 @@ Base `Button` (`src/components/ui/button.tsx`) uses `class-variance-authority`:
 - **Style**: very dark background (`#12131c`), standard border, `z-30` elevation.
 
 ### Header chrome
-- **Search field**: centered `max-w-xl`, `rounded-lg`, white/4% fill, brand focus, `Ctrl K` keyboard shortcut (focuses the input).
-- **Icon buttons** (bell, theme toggle): `h-9 w-9 rounded-lg border-white/10 bg-white/[0.03]`, hover brightens. The notification bell carries a pulsing accent dot.
 - **Avatar chip**: `rounded-full` with `bg-gradient-to-br from-brand to-accent` and a soft violet glow; initials derived from the user name.
-- **kbd hint**: `border-white/10 bg-white/5 rounded text-[10px] text-muted`.
+- **Removed chrome**: the global search field (with `Ctrl K` shortcut), notification bell, and theme toggle were removed — they had no real functionality. The header now shows only the avatar chip + greeting and the user dropdown (Settings / Sign out).
 
 ### Progress bars
 - Track: `h-1.5 rounded-full bg-white/10`; fill: colored with a matching `box-shadow` glow (used in the health metric breakdown).
@@ -193,7 +191,7 @@ A 3.9s cinematic overlay that plays once on entering the dashboard: "MEETING DET
 - **AI Copilot card** (bottom): gradient `from-brand/20 via-ai/10` panel with a glowing `Bot` tile, pulsing green "● Active" indicator, and a "View Insights" action.
 
 ### Header (sticky)
-- `glass-panel`, sticky top, `z-30`, centered global search with `Ctrl K`, notification bell with pulsing accent dot, theme toggle, avatar chip + greeting, and a user dropdown menu (Settings / Sign out).
+- `glass-panel`, sticky top, `z-30`, avatar chip + greeting, and a user dropdown menu (Settings / Sign out). Search, bell, and theme toggle were removed as decorative dead UI.
 
 ### Mobile bottom nav
 - Fixed `glass-panel` bar at the bottom (`md:hidden`) with six items (Dashboard, Meetings, Reports, Actions, Team, Analytics); active item is brand-colored with a soft drop-shadow glow.
