@@ -191,16 +191,15 @@ body {
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* --- Lenis smooth scroll (minimal required rules) ----------------------- */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
+/* --- Native smooth scrolling ----------------------------------------------
+   Lenis was removed in favor of the browser's own scrolling (zero wheel-event
+   hijacking, zero per-frame work). Smooth behavior applies only for users who
+   have not requested reduced motion, and only for programmatic/anchor jumps —
+   physical wheel/touch input is always handled natively by the browser. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* --- Scroll-reveal system ------------------------------------------------ */
