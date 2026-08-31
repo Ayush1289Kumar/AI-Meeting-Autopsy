@@ -2,12 +2,18 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Activity, UploadCloud, BrainCircuit } from "lucide-react";
+import { Activity, UploadCloud } from "lucide-react";
 import { AnimatedGradientText } from "@/components/motion/animated-gradient-text";
 import { BlurFade } from "@/components/motion/blur-fade";
 import { MagneticButton } from "@/components/motion/magnetic-button";
-import { AiOrb } from "@/components/dashboard/showcase/ai-orb";
 import { CountUp } from "@/components/motion/count-up";
+// AutopsyScan - AI scan plane sweeping a meeting-data cluster (client-only, no SSR).
+
+const AutopsyScan = dynamic(
+  () => import("@/components/common/autopsy-scan").then((m) => m.AutopsyScan),
+  { ssr: false }
+);
+
 
 
 
@@ -102,7 +108,7 @@ export function LandingHero() {
 
             {/* Mini stats strip */}
             <BlurFade delay={400} inView>
-              <div className="mt-8 flex items-center gap-6">
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
                 {TRUST_STATS.map((s, i) => (
                   <div key={s.label} className="text-center">
                     <p className="font-display text-2xl font-black tabular text-white">
@@ -115,13 +121,14 @@ export function LandingHero() {
             </BlurFade>
           </div>
 
-          {/* Right: Visual */}
-          <div className="relative hidden md:flex md:items-center md:justify-center">
-            {/* AiOrb centered */}
-            <div className="relative h-[480px] w-full">
-              <div className="relative z-10 flex items-center justify-center pt-8">
-                <AiOrb />
+          {/* Right: Visual - AutopsyScan (AI scan plane dissecting the meeting-data cluster) */}
+          <div className="relative flex items-center justify-center">
+            <div className="relative h-[460px] w-full sm:h-[560px]">
+              {/* Reactive orb (WebGL particles) - behind the brain core */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <AutopsyScan className="h-[500px] w-full max-w-[640px] sm:h-[620px]" />
               </div>
+
             </div>
           </div>
         </div>

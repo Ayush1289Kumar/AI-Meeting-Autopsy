@@ -1,0 +1,11 @@
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3100
+  - Environments: .env
+
+ ✓ Starting...
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from D:\Development\Hackathon Projects\AI-Meeting-Autopsy\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Ready in 2s
+ ✓ Compiled /src/middleware in 147ms (72 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 4.8s (657 modules)
+ GET / 200 in 5075ms
