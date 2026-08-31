@@ -7,10 +7,10 @@ import { AnimatedGradientText } from "@/components/motion/animated-gradient-text
 import { BlurFade } from "@/components/motion/blur-fade";
 import { MagneticButton } from "@/components/motion/magnetic-button";
 import { CountUp } from "@/components/motion/count-up";
-// WaveformSphere - Option 3: breathing point-cloud sphere with waveform displacement (client-only, no SSR).
+// HolographicCard - Option 4: CSS 3D transformed glass card with parallax (client-only, no SSR).
 
-const WaveformSphere = dynamic(
-  () => import("@/components/common/waveform-sphere").then((m) => m.WaveformSphere),
+const HolographicCard = dynamic(
+  () => import("@/components/common/holographic-card").then((m) => m.HolographicCard),
   { ssr: false }
 );
 
@@ -121,11 +121,11 @@ export function LandingHero() {
             </BlurFade>
           </div>
 
-          {/* Right: Visual - WaveformSphere (Option 3: breathing point-cloud with waveform displacement) */}
+          {/* Right: Visual - HolographicCard (Option 4: CSS 3D transformed glass dashboard) */}
           <div className="relative flex items-center justify-center">
             <div className="relative h-[460px] w-full sm:h-[560px]">
               <div className="absolute inset-0 flex items-center justify-center">
-                <WaveformSphere className="h-[500px] w-full max-w-[640px] sm:h-[620px]" />
+                <HolographicCard className="h-[500px] w-full max-w-[640px] sm:h-[620px]" />
               </div>
             </div>
           </div>
