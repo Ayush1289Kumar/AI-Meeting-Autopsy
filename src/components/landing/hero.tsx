@@ -7,10 +7,10 @@ import { AnimatedGradientText } from "@/components/motion/animated-gradient-text
 import { BlurFade } from "@/components/motion/blur-fade";
 import { MagneticButton } from "@/components/motion/magnetic-button";
 import { CountUp } from "@/components/motion/count-up";
-// NeuralWeb - Option 1: 3D network graph of meeting entities (client-only, no SSR).
+// WaveformSphere - Option 3: breathing point-cloud sphere with waveform displacement (client-only, no SSR).
 
-const NeuralWeb = dynamic(
-  () => import("@/components/common/neural-web").then((m) => m.NeuralWeb),
+const WaveformSphere = dynamic(
+  () => import("@/components/common/waveform-sphere").then((m) => m.WaveformSphere),
   { ssr: false }
 );
 
@@ -121,11 +121,11 @@ export function LandingHero() {
             </BlurFade>
           </div>
 
-          {/* Right: Visual - NeuralWeb (Option 1: 3D neural conversation graph) */}
+          {/* Right: Visual - WaveformSphere (Option 3: breathing point-cloud with waveform displacement) */}
           <div className="relative flex items-center justify-center">
             <div className="relative h-[460px] w-full sm:h-[560px]">
               <div className="absolute inset-0 flex items-center justify-center">
-                <NeuralWeb className="h-[500px] w-full max-w-[640px] sm:h-[620px]" />
+                <WaveformSphere className="h-[500px] w-full max-w-[640px] sm:h-[620px]" />
               </div>
             </div>
           </div>
