@@ -236,7 +236,7 @@ export function NeuralWeb({ className = "" }: { className?: string }) {
       if (signals.length >= SIGNAL_SLOTS) return;
       signals.push({
         from, to, t: 0,
-        speed: speed ?? 0.32 + Math.random() * 0.18,
+        speed: speed ?? 0.70 + Math.random() * 0.30,
         col: new THREE.Color(NODES[from].hex),
       });
     };
@@ -261,7 +261,7 @@ export function NeuralWeb({ className = "" }: { className?: string }) {
         if (newId !== null) {
           // Burst signals from hovered node to all neighbours
           ADJ[newId].slice(0, 8).forEach((nbr) =>
-            pushSignal(newId, nbr, 0.55 + Math.random() * 0.3)
+            pushSignal(newId, nbr, 1.0 + Math.random() * 0.5)
           );
           canvas.style.cursor = "crosshair";
         } else {
@@ -293,13 +293,13 @@ export function NeuralWeb({ className = "" }: { className?: string }) {
       elapsed += dt;
 
       /* Parallax + slow global rotation */
-      mouse.x += (mouse.tx - mouse.x) * 0.05;
-      mouse.y += (mouse.ty - mouse.y) * 0.05;
-      root.rotation.y = elapsed * 0.055 + mouse.x * 0.38;
+      mouse.x += (mouse.tx - mouse.x) * 0.09;
+      mouse.y += (mouse.ty - mouse.y) * 0.09;
+      root.rotation.y = elapsed * 0.14 + mouse.x * 0.45;
       root.rotation.x = mouse.y * 0.22;
 
       /* Hub breathing pulse */
-      sprites[0].scale.setScalar(NODES[0].radius * (1 + Math.sin(elapsed * 1.9) * 0.09));
+      sprites[0].scale.setScalar(NODES[0].radius * (1 + Math.sin(elapsed * 3.2) * 0.12));
 
       /* Per-node hover/connected state */
       sprites.forEach((sp, i) => {
@@ -315,20 +315,20 @@ export function NeuralWeb({ className = "" }: { className?: string }) {
       });
 
       /* Edge gentle opacity pulse */
-      edgeMat.opacity = 0.10 + Math.sin(elapsed * 0.45) * 0.05;
+      edgeMat.opacity = 0.12 + Math.sin(elapsed * 1.1) * 0.07;
 
       /* Auto-fire: hub -> random speaker -> linked topic, every ~3 s */
-      if (elapsed - lastFire > 3.0) {
+      if (elapsed - lastFire > 1.4) {
         lastFire = elapsed;
         const spks = [1, 2, 3, 4];
         const sp   = spks[Math.floor(Math.random() * spks.length)];
-        pushSignal(0, sp, 0.28 + Math.random() * 0.12);
+        pushSignal(0, sp, 0.65 + Math.random() * 0.25);
         // Chain: speaker -> topic with slight head-start delay (negative t offset)
         const topicNbr = ADJ[sp].find((n) => NODES[n].type === "topic");
         if (topicNbr !== undefined && signals.length < SIGNAL_SLOTS) {
           signals.push({
-            from: sp, to: topicNbr, t: -0.55,
-            speed: 0.30 + Math.random() * 0.12,
+            from: sp, to: topicNbr, t: -0.35,
+            speed: 0.70 + Math.random() * 0.20,
             col: new THREE.Color(NODES[sp].hex),
           });
         }
