@@ -82,7 +82,6 @@ export function AutopsyScan({ className = "" }: { className?: string }) {
     const baseColors = new Float32Array(clusterCount * 3); // idle color per particle
     const idleColor = new THREE.Color("#8b5cf6");
     const activeColor = new THREE.Color("#22d3ee");
-    const flashColor = new THREE.Color("#ffffff");
 
     // Box-Muller-ish gaussian helper
     const gauss = () =>

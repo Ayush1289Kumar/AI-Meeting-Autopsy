@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Activity, Clock, FileText, CheckCircle, AlertTriangle, Users } from "lucide-react";
+import { Activity, Clock, FileText, CheckCircle, AlertTriangle } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
    Component

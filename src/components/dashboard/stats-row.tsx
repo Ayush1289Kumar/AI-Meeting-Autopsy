@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, CheckSquare, ListChecks, Timer, Tornado, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,15 @@ const ICONS = {
   balance: Users,
   waste: Timer,
   drift: Tornado,
+};
+
+/** Deep-dive route each stat card links to when clicked. */
+const LINKS: Record<StatCard["icon"], string> = {
+  decisions: "/decisions",
+  actions: "/action-items",
+  balance: "/speakers",
+  waste: "/topics-timeline",
+  drift: "/topics-timeline",
 };
 
 const TONES = {
@@ -49,7 +59,11 @@ export function StatsRow({ stats }: { stats: StatCard[] }) {
       {stats.map((stat) => {
         const Icon = ICONS[stat.icon];
         return (
-          <div key={stat.label} className="card-surface overflow-hidden">
+          <Link
+            key={stat.label}
+            href={LINKS[stat.icon]}
+            className="card-surface group overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:ring-1 hover:ring-brand/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
+          >
             <div className="mb-3 flex items-center justify-between">
               <span className="flex items-center gap-2.5">
                 <span
@@ -65,17 +79,16 @@ export function StatsRow({ stats }: { stats: StatCard[] }) {
             >
               {stat.value}
             </p>
-            <p className={cn("mt-1 flex items-center gap-1 text-[11px]", TONES[stat.tone])}>
+            {/* Trend is secondary info — rendered in a lighter muted tone */}
+            <p className={cn("mt-1 flex items-center gap-1 text-[11px] text-muted transition-colors group-hover:text-white/70")}>
               {stat.trend ? (
-                stat.trend.direction === "up" ? (
-                  <ArrowUpRight size={12} />
-                ) : (
-                  <ArrowDownRight size={12} />
-                )
+                <span className={TONES[stat.tone]}>
+                  {stat.trend.direction === "up" ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                </span>
               ) : null}
               {stat.subtitle}
             </p>
-          </div>
+          </Link>
         );
       })}
     </div>

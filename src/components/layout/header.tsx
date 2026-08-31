@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Stethoscope, Gauge, FolderKanban, FileBarChart, ListChecks, Users, BarChart3, Plug, Settings } from "lucide-react";
+import { Stethoscope, Gauge, FolderKanban, FileBarChart, ListChecks, Users, BarChart3, Plug, UploadCloud } from "lucide-react";
+import { UploadDialog } from "@/components/meeting/upload-dialog";
 import { initials, cn } from "@/lib/utils";
 
 const NAV = [
@@ -18,11 +19,32 @@ const NAV = [
 
 export function Header({ userName }: { userName: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const meetingId = useSearchParams().get("meeting");
   const withMeeting = (href: string) => (meetingId ? `${href}?meeting=${meetingId}` : href);
 
   const first = userName?.trim() ? userName.split(" ")[0] : "Buddy";
+
+  // Close the user dropdown when clicking outside of it (or on Escape).
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (event: MouseEvent | TouchEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
 
   return (
     <header className="sticky top-4 z-40 mx-4 md:mx-auto md:max-w-7xl flex items-center justify-between gap-3 lg:gap-6 rounded-full border border-white/10 bg-white/5 px-4 lg:px-6 py-2 lg:py-3 shadow-lg backdrop-blur-xl transition-all">
@@ -64,30 +86,50 @@ export function Header({ userName }: { userName: string }) {
 
       {/* Right controls */}
       <div className="flex shrink-0 items-center gap-2">
+        {/* Quick upload — the primary CTA, no longer buried inside pages */}
         <button
           type="button"
-          onClick={() => setMenuOpen((o) => !o)}
-          className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] p-1 pr-3 transition-colors hover:border-white/20"
+          onClick={() => setUploadOpen(true)}
+          aria-label="Upload new meeting"
+          title="Upload new meeting"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-muted transition-all hover:border-brand/40 hover:bg-brand/15 hover:text-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-brand to-accent text-[11px] font-bold text-white shadow-[0_0_10px_-3px_rgba(139,92,246,0.8)]">
-            {initials(first)}
-          </span>
-          <span className="hidden text-left leading-tight lg:block">
-            <span className="block text-[13px] font-semibold text-white">{first}</span>
-          </span>
+          <UploadCloud size={15} />
         </button>
 
-        {menuOpen ? (
-          <div className="absolute right-4 top-14 w-44 rounded-xl border border-white/10 bg-card/90 p-1 shadow-xl backdrop-blur-xl">
-            <a href="/settings" className="block rounded-lg px-3 py-2 text-sm text-white hover:bg-white/10">
-              Settings
-            </a>
-            <a href="/api/auth/logout" className="block rounded-lg px-3 py-2 text-sm text-white hover:bg-white/10">
-              Sign out
-            </a>
-          </div>
-        ) : null}
+        <div ref={menuRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] p-1 pr-3 transition-colors hover:border-white/20"
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-brand to-accent text-[11px] font-bold text-white shadow-[0_0_10px_-3px_rgba(139,92,246,0.8)]">
+              {initials(first)}
+            </span>
+            <span className="hidden text-left leading-tight lg:block">
+              <span className="block text-[13px] font-semibold text-white">{first}</span>
+            </span>
+          </button>
+
+          {menuOpen ? (
+            <div
+              role="menu"
+              className="absolute right-0 top-12 w-44 origin-top-right rounded-xl border border-white/10 bg-card/90 p-1 shadow-xl backdrop-blur-xl transition-all duration-150 animate-[fade-in_0.15s_ease_both]"
+            >
+              <a href="/settings" role="menuitem" className="block rounded-lg px-3 py-2 text-sm text-white hover:bg-white/10">
+                Settings
+              </a>
+              <a href="/api/auth/logout" role="menuitem" className="block rounded-lg px-3 py-2 text-sm text-white hover:bg-white/10">
+                Sign out
+              </a>
+            </div>
+          ) : null}
+        </div>
       </div>
+
+      <UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)} />
     </header>
   );
 }

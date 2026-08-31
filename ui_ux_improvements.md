@@ -152,20 +152,22 @@
 
 ## Summary Table
 
-| Priority | Area | Change Type |
-|---|---|---|
-| 🔴 High | Upload Dialog | Drag-and-drop dropzone, file preview, better tabs |
-| 🔴 High | Mobile Nav | Fix broken `MobileNav` → `MobileBottomNav` regression |
-| 🔴 High | Sidebar | Left-edge active indicator, nav grouping, meeting context chip |
-| 🔴 High | Header | Click-outside close, dropdown animation, quick-upload CTA |
-| 🟡 Medium | Stats Row | Make cards clickable with deep-link routing |
-| 🟡 Medium | Health Score | Benchmark bar, onboarding nudge, confetti on 80+ |
-| 🟡 Medium | AI Recommendations | Priority tiers, mark-as-done, expand/collapse |
-| 🟡 Medium | Testimonials | Marquee, verified labels, richer avatars |
-| 🟡 Medium | Meeting Intro | `localStorage` skip preference |
-| 🟢 Low | Empty States | Page-specific illustrations, demo data |
-| 🟢 Low | Charts | Clickable segments, cross-filter interactions |
-| 🟢 Low | Settings | Grouped cards, save state animation |
-| 🟢 Low | Keyboard | `Cmd+K` command palette, `/` shortcut |
-| 🟢 Low | Proof Strip | Marquee animation, live counter |
-| 🟢 Low | A11y | Micro-copy contrast bump |
+> **Status (2026-09-01):** All 🔴 High items and the Stats Row + Meeting Intro 🟡 Medium items are **implemented** — see `docs/07_changelog.md`. The remaining 🟡/🟢 items are still open.
+
+| Priority | Area | Change Type | Status |
+|---|---|---|---|
+| 🔴 High | Upload Dialog | Drag-and-drop dropzone, file preview, better tabs | ✅ Done |
+| 🔴 High | Mobile Nav | Fix broken `MobileNav` → `MobileBottomNav` regression | ✅ Done (MobileBottomNav confirmed rendered by AppShell; `MobileNav` stub documented) |
+| 🔴 High | Sidebar | Left-edge active indicator, nav grouping, meeting context chip | ✅ Done |
+| 🔴 High | Header | Click-outside close, dropdown animation, quick-upload CTA | ✅ Done |
+| 🟡 Medium | Stats Row | Make cards clickable with deep-link routing | ✅ Done |
+| 🟡 Medium | Health Score | Benchmark bar, onboarding nudge, confetti on 80+ | ⬜ Open |
+| 🟡 Medium | AI Recommendations | Priority tiers, mark-as-done, expand/collapse | ⬜ Open |
+| 🟡 Medium | Testimonials | Marquee, verified labels, richer avatars | ⬜ Open |
+| 🟡 Medium | Meeting Intro | `localStorage` skip preference | ✅ Done |
+| 🟢 Low | Empty States | Page-specific illustrations, demo data | ⬜ Open |
+| 🟢 Low | Charts | Clickable segments, cross-filter interactions | ⬜ Open |
+| 🟢 Low | Settings | Grouped cards, save state animation | ⬜ Open |
+| 🟢 Low | Keyboard | `Cmd+K` command palette, `/` shortcut | ⬜ Open |
+| 🟢 Low | Proof Strip | Marquee animation, live counter | ⬜ Open |
+| 🟢 Low | A11y | Micro-copy contrast bump | ⬜ Open |

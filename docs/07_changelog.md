@@ -2,6 +2,18 @@
 
 ## Changelog
 
+### 2026-09-01
+
+- Implemented the high-priority UI/UX improvements from `ui_ux_improvements.md`:
+  - **Sidebar**: nav grouped into "Analysis" and "System" sections with micro-labels and a separator; the active indicator is now a left-edge glowing accent bar (conventional vertical-sidebar pattern); a "Meeting #X · Active" context chip appears when a `?meeting=` param is present; all nav links still preserve meeting context.
+  - **Header**: the user dropdown now closes on outside click (mouse + touch) and Escape, with `aria-haspopup` / `aria-expanded` / `role="menu"` semantics and a fade-in animation; added an icon-only quick-upload CTA (`UploadCloud`) that opens the Upload Dialog from anywhere.
+  - **Upload Dialog**: the file input is now a drag-and-drop dropzone with a drag-over glow state and browse fallback; selected files show as a chip (name + human-readable size + clear button); input modes became icon-bearing pill tabs (`role="tablist"` / `aria-selected`); live word count under the transcript textarea.
+  - **Stats Row**: stat cards are now clickable deep links to their relevant pages (`/decisions`, `/action-items`, `/speakers`, `/topics-timeline`) with hover lift, focus rings, and muted trend text.
+  - **Meeting Intro**: the "played" flag is persisted in `localStorage` (once per browser instead of once per session); the StrictMode-safe write-on-finish logic and the post-mount decision (hydration-safe) are preserved.
+- Fixed pre-existing lint errors that blocked `npm run build`: unused `flashColor` in `autopsy-scan.tsx` and unused `Users` import in `holographic-card.tsx`.
+- Verified: `npm run typecheck` clean and `npm run build` green (30/30 pages generated).
+- Note: `MobileNav` in `sidebar.tsx` remains a documented deprecated stub — mobile navigation is `MobileBottomNav`, rendered once by the `AppShell` (delegating from both would double-render it).
+
 ### 2026-08-26 (2)
 
 - Re-added Lenis smooth scrolling, done correctly: idle-loaded provider, reactive reduced-motion teardown, `data-lenis-prevent` on all nested scrollables (transcript viewer, dialog, speaker drilldown, sidebar), and the full official CSS rule set with a native CSS fallback.

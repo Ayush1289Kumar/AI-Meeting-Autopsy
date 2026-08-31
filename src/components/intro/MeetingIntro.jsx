@@ -43,9 +43,9 @@ export function MeetingIntro({ onComplete = () => {} }) {
   const [reduced, setReduced] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [done, setDone] = useState(false);
-  // Play the intro at most once per browser session.
+  // Play the intro at most once per browser (persisted across sessions).
   // IMPORTANT: this decision happens AFTER mount (never during SSR) — reading
-  // sessionStorage in useState's initializer made the server render the full
+  // localStorage in useState's initializer made the server render the full
   // overlay while the client rendered null -> hydration mismatch -> an
   // orphaned, click-blocking fullscreen layer no timer could remove.
   //
@@ -58,7 +58,7 @@ export function MeetingIntro({ onComplete = () => {} }) {
   useEffect(() => {
     let played = false;
     try {
-      played = sessionStorage.getItem(INTRO_KEY) === "1";
+      played = localStorage.getItem(INTRO_KEY) === "1";
     } catch {
       /* private-mode / storage unavailable: just play the intro */
     }
@@ -69,7 +69,7 @@ export function MeetingIntro({ onComplete = () => {} }) {
   useEffect(() => {
     if (!done) return;
     try {
-      sessionStorage.setItem(INTRO_KEY, "1");
+      localStorage.setItem(INTRO_KEY, "1");
     } catch {
       /* ignore */
     }
