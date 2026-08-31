@@ -110,7 +110,7 @@ export function AutopsyScan({ className = "" }: { className?: string }) {
 
     // ══════════ Layer 2: The AI scan plane ══════════
     // A translucent particle grid sweeping vertically through the cluster
-    const planeSpan = 4.4;
+    const planeSpan = 3.4;
     const planeSegs = isSmallScreen ? 26 : 38;
     const planePositions: number[] = [];
     const planeColors: number[] = [];
@@ -182,12 +182,15 @@ export function AutopsyScan({ className = "" }: { className?: string }) {
       // Parallax + slow clinical rotation
       mouse.x += (mouse.targetX - mouse.x) * 0.04;
       mouse.y += (mouse.targetY - mouse.y) * 0.04;
-      root.rotation.y = time * 0.08 + mouse.x * 0.15;
-      root.rotation.x = mouse.y * 0.1;
+      root.rotation.y = time * 0.08 + mouse.x * 0.45;
+      root.rotation.x = mouse.y * 0.32;
+      camera.position.x = mouse.x * 0.5;
+      camera.position.y = 1.1 + mouse.y * 0.35;
+      camera.lookAt(0, 0, 0);
 
-      // Scan plane height: triangle wave between -2.2 and +2.2
+      // Scan plane height: triangle wave — stays within the visible cluster
       const cycle = (time % (SCAN_HALF_PERIOD * 2)) / SCAN_HALF_PERIOD; // 0..2
-      const planeY = (cycle < 1 ? cycle : 2 - cycle) * 2.2 - 0; // -2.2..+2.2 sweep
+      const planeY = (cycle < 1 ? cycle : 2 - cycle) * 1.7; // -1.7..+1.7 sweep
       scanPlane.position.y = planeY;
       edgeLine.position.y = planeY;
 
@@ -205,13 +208,13 @@ export function AutopsyScan({ className = "" }: { className?: string }) {
 
         // Distance from the scan plane
         const dist = Math.abs(py - planeY);
-        if (dist < 0.22) {
-          ignite[i] = Math.min(ignite[i] + (0.22 - dist) * 0.5, 1.6);
+        if (dist < 0.42) {
+          ignite[i] = Math.min(ignite[i] + (0.42 - dist) * 0.9, 2.0);
         }
 
         // Cool-down
         if (ignite[i] > 0) {
-          ignite[i] = Math.max(ignite[i] - dt * 0.55, 0);
+          ignite[i] = Math.max(ignite[i] - dt * 0.8, 0);
         }
 
         // Write position (slight jitter animation while ignited)
@@ -256,16 +259,21 @@ export function AutopsyScan({ className = "" }: { className?: string }) {
 
     animate();
 
-    // ── Resize Handling ──
-    const handleResize = () => {
+    // ── Resize Handling (fully responsive: fit scene to container) ──
+    const fitToContainer = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
       if (!w || !h) return;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      // Scale the whole scene down on small containers so nothing gets clipped
+      const s = Math.max(0.55, Math.min(1, Math.min(w / 540, h / 600)));
+      root.scale.setScalar(s);
     };
+    const handleResize = () => fitToContainer();
     window.addEventListener("resize", handleResize);
+    fitToContainer();
 
     // ── Cleanup ──
     return () => {

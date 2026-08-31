@@ -9,3 +9,15 @@
  ○ Compiling / ...
  ✓ Compiled / in 4.8s (657 modules)
  GET / 200 in 5075ms
+ ✓ Compiled in 291ms (294 modules)
+ ✓ Compiled / in 138ms (336 modules)
+ GET / 200 in 260ms
+ GET / 200 in 219ms
+ GET / 200 in 46ms
+ ✓ Compiled /favicon.ico in 166ms (368 modules)
+ GET /favicon.ico 200 in 227ms
+ ✓ Compiled in 5.5s (630 modules)
+ ✓ Compiled in 376ms (630 modules)
+ GET / 200 in 483ms
+ ✓ Compiled /favicon.ico in 265ms (368 modules)
+ GET /favicon.ico 200 in 533ms
