@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { NeuralWebVisual } from "@/components/common/visual-wrappers";
 import { Card, CardHeader } from "@/components/ui/card";
 import { GroupedBarChart } from "@/components/charts/lazy";
 import { SpeakerDrilldown } from "@/components/speakers/speaker-drilldown";
@@ -23,6 +24,13 @@ export default async function SpeakersPage({ searchParams }: { searchParams?: { 
 
   return (
     <div className="space-y-4">
+      {/* Neural web visual — full-width band, canvas rendered as a centered
+          square so the 3D scene keeps a natural viewport (no stretch/overflow) */}
+      <div className="relative h-80 overflow-hidden rounded-2xl border border-border/60 sm:h-[28rem] md:h-[32rem]">
+        <div className="absolute inset-0">
+          <NeuralWebVisual className="h-full w-full" />
+        </div>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {meeting.participants.map((participant) => {
           const decisions = meeting.decisions.filter((decision) => decision.owner === participant.name).length;

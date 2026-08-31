@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useId } from "react";
 import { Activity, BrainCircuit, CheckCircle2, Sparkles } from "lucide-react";
 import { GlassCard, Overline, StatusPill } from "./primitives";
 import { CountUp } from "@/components/motion/count-up";
+import { AutopsyScanVisual } from "@/components/common/visual-wrappers";
 
 const HEALTH_METRICS = [
   { label: "Engagement", value: 88, color: "#22d3ee" },
@@ -62,9 +63,16 @@ function ScoreRing({ score, size = 172 }: { score: number; size?: number }) {
 
 export function AnalysisSection() {
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="relative grid gap-4 lg:grid-cols-2">
+      {/* Background Effect — oversized so the 3D scene fills the space */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-visible flex items-center justify-center opacity-30">
+        <div className="w-[140%] h-[200%]">
+          <AutopsyScanVisual className="h-full w-full" />
+        </div>
+      </div>
+
       {/* Meeting Health Score */}
-      <GlassCard>
+      <GlassCard className="relative z-10">
         <div className="flex items-center gap-2">
           <Activity size={15} className="text-accent" />
           <h3 className="font-display text-base font-semibold tracking-tight text-white">
@@ -100,7 +108,7 @@ export function AnalysisSection() {
       </GlassCard>
 
       {/* AI Autopsy Report */}
-      <GlassCard className="relative flex flex-col overflow-hidden">
+      <GlassCard className="relative z-10 flex flex-col overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-ai/15 blur-[90px] animate-aurora" />
         <div className="relative">
           <div className="flex items-center gap-2">

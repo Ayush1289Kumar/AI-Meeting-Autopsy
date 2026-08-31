@@ -3,6 +3,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { GroupedBarChart } from "@/components/charts/lazy";
 import { TrendLineChart } from "@/components/charts/lazy";
 import { ReportFilters } from "@/components/reports/report-filters";
+import { ParticleVortexVisual } from "@/components/common/visual-wrappers";
 import { Suspense } from "react";
 import { getActiveUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -146,6 +147,13 @@ export default async function ReportsPage({
 
   return (
     <div className="space-y-4">
+      {/* Particle vortex visual — full-width band, canvas rendered as a centered
+          square so the 3D scene keeps a natural viewport (no stretch/overflow) */}
+      <div className="relative h-80 overflow-hidden rounded-2xl border border-border/60 sm:h-[28rem] md:h-[32rem]">
+        <div className="absolute inset-0">
+          <ParticleVortexVisual className="h-full w-full" />
+        </div>
+      </div>
       <Suspense fallback={<div className="h-10 animate-pulse rounded-lg bg-white/5" />}>
         <ReportFilters types={types} />
       </Suspense>

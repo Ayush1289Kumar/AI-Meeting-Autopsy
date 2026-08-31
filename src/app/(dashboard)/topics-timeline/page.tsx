@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/common/empty-state";
+import { AutopsyScanVisual } from "@/components/common/visual-wrappers";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ValueAreaChart } from "@/components/charts/lazy";
@@ -35,6 +36,13 @@ export default async function TopicsTimelinePage({ searchParams }: { searchParam
 
   return (
     <div className="space-y-4">
+      {/* Autopsy scan visual — full-width band, canvas rendered as a centered
+          square so the 3D scene keeps a natural viewport (no stretch/overflow) */}
+      <div className="relative h-80 overflow-hidden rounded-2xl border border-border/60 sm:h-[28rem] md:h-[32rem]">
+        <div className="absolute inset-0">
+          <AutopsyScanVisual className="h-full w-full" />
+        </div>
+      </div>
       <Card>
         <CardHeader title="Full Timeline" info="Each topic as a proportional band; drift segments are striped red." />
         <div className="flex h-10 w-full overflow-hidden rounded-lg">

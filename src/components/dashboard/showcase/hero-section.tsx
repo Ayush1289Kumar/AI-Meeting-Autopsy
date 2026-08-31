@@ -3,44 +3,14 @@
 import { useState } from "react";
 import { Activity, UploadCloud } from "lucide-react";
 import { AiOrb } from "./ai-orb";
+import { DashboardGlobeVisual } from "@/components/common/visual-wrappers";
 import { GlassCard, Overline } from "./primitives";
 import { UploadDialog } from "@/components/meeting/upload-dialog";
 import { AnimatedGradientText } from "@/components/motion/animated-gradient-text";
 import { MagneticButton } from "@/components/motion/magnetic-button";
-import { CountUp } from "@/components/motion/count-up";
 
 
-const METRICS = [
-  { value: 12, suffix: "", label: "Meetings Analyzed" },
-  { value: 92, suffix: "%", label: "Avg. Agenda Completion" },
-  { value: 48, suffix: "", label: "Signals Detected" },
-  { value: 6.2, decimals: 1, suffix: "h", label: "Time Saved" },
-];
 
-
-/** Small floating metrics card (upper-right on desktop, stacked on mobile). */
-function StatMetrics({ className }: { className?: string }) {
-  return (
-    <div className={className}>
-      <p className="mb-3 font-display text-base font-semibold tracking-tight text-white">
-        Better meetings build better teams.
-      </p>
-      <div className="grid grid-cols-2 gap-2.5">
-        {METRICS.map((m, i) => (
-          <div
-            key={m.label}
-            className="rounded-xl border border-white/10 bg-[#0a0d1f]/80 p-3 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-[#0a0d1f]/90"
-          >
-            <p className="font-display text-xl font-bold tracking-tight tabular text-white">
-              <CountUp to={m.value} suffix={m.suffix} decimals={m.decimals ?? 0} duration={1200 + i * 200} />
-            </p>
-            <p className="mt-0.5 text-[11px] leading-tight text-muted">{m.label}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export function HeroSection() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -115,10 +85,20 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* right: AI brand-signature visual + floating metrics */}
-        <div className="relative">
-          <AiOrb />
-          <StatMetrics className="mt-6 w-full md:absolute md:-top-10 md:right-0 md:mt-0 md:w-72 lg:-right-3" />
+        {/* right: globe visual above the AI orb (brand signature) + floating metrics */}
+        <div className="relative flex flex-col items-center justify-center py-10">
+          {/* Dashboard globe background */}
+          <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-65 mix-blend-screen">
+            <div className="aspect-square h-[150%] sm:h-[180%] w-auto max-w-none">
+              <DashboardGlobeVisual className="h-full w-full object-cover" />
+            </div>
+          </div>
+          
+          <div className="relative z-10">
+            <AiOrb />
+          </div>
+          
+
         </div>
       </div>
 

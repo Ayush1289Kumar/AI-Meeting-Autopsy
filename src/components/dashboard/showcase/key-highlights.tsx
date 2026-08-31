@@ -1,6 +1,7 @@
 import { CheckSquare, ListChecks, UserMinus, Wind } from "lucide-react";
 import { CountUp } from "@/components/motion/count-up";
 import { BlurFade } from "@/components/motion/blur-fade";
+import { NeuralWebVisual } from "@/components/common/visual-wrappers";
 
 
 const HIGHLIGHTS = [
@@ -48,11 +49,19 @@ const HIGHLIGHTS = [
 
 export function KeyHighlights() {
   return (
-    <section>
-      <h3 className="mb-3 font-display text-base font-semibold tracking-tight text-white">
-        Key Highlights
-      </h3>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="relative overflow-hidden rounded-2xl p-0.5">
+      {/* Background Effect — oversized so the neural web fills the space */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-visible flex items-center justify-center opacity-25">
+        <div className="w-[130%] h-[250%]">
+          <NeuralWebVisual className="h-full w-full" />
+        </div>
+      </div>
+
+      <div className="relative z-10">
+        <h3 className="mb-3 font-display text-base font-semibold tracking-tight text-white px-2">
+          Key Highlights
+        </h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {HIGHLIGHTS.map((h, i) => (
           <BlurFade key={h.title} delay={i * 80}>
             <div
@@ -73,6 +82,7 @@ export function KeyHighlights() {
             </div>
           </BlurFade>
         ))}
+      </div>
       </div>
     </section>
   );

@@ -4,6 +4,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { GlassCard } from "./primitives";
 import { CountUp } from "@/components/motion/count-up";
 import { BlurFade } from "@/components/motion/blur-fade";
+import { ParticleVortexVisual } from "@/components/common/visual-wrappers";
 
 /* ---------- Speaking Distribution ---------- */
 const SPEAKERS = [
@@ -154,16 +155,25 @@ function ActionItems() {
 
 export function BottomSection() {
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
-      <BlurFade delay={0}>
-        <SpeakingDonut />
-      </BlurFade>
-      <BlurFade delay={80}>
-        <TopTopics />
-      </BlurFade>
-      <BlurFade delay={160}>
-        <ActionItems />
-      </BlurFade>
+    <div className="relative overflow-hidden rounded-2xl p-0.5">
+      {/* Background Effect — oversized so the vortex fills the space */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-visible flex items-center justify-center opacity-25">
+        <div className="w-[130%] h-[220%]">
+          <ParticleVortexVisual className="h-full w-full" />
+        </div>
+      </div>
+
+      <div className="relative z-10 grid gap-4 lg:grid-cols-3">
+        <BlurFade delay={0}>
+          <SpeakingDonut />
+        </BlurFade>
+        <BlurFade delay={80}>
+          <TopTopics />
+        </BlurFade>
+        <BlurFade delay={160}>
+          <ActionItems />
+        </BlurFade>
+      </div>
     </div>
   );
 }
